@@ -4,18 +4,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * PunishSystem discourages negative outcomes:
+ * PunishmentSystem discourages negative outcomes:
  * - Applies penalties to modules
  * - Helps AI avoid repeating failed strategies
  * - Can integrate with TrainingManager and MemoryManager
  */
-public class PunishSystem {
+public class PunishmentSystem {
     private static final Logger LOGGER = LoggerFactory.getLogger("forgeai-punish");
 
     private int penaltyPoints = 0;
 
     public void init() {
-        LOGGER.info("PunishSystem initialized.");
+        LOGGER.info("PunishmentSystem initialized.");
     }
 
     /**

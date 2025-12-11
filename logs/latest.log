@@ -1,0 +1,463 @@
+[03:51:47] [main/INFO]: =================================
+[03:51:47] [main/INFO]: ForgeAI Virtual Testing Harness
+[03:51:47] [main/INFO]: =================================
+[03:51:47] [main/INFO]: Initializing test infrastructure...
+[03:51:47] [main/INFO]: ContextScanner initialized.
+[03:51:47] [main/WARN]: No existing allowed list found, starting fresh.
+[03:51:47] [main/INFO]: CommunicationManager initialized with 0 trusted players.
+[03:51:47] [main/INFO]: TrainingManager initialized.
+[03:51:47] [main/INFO]: MemoryManager initialized.
+[03:51:47] [main/INFO]: RewardSystem initialized.
+[03:51:47] [main/INFO]: PunishmentSystem initialized.
+[03:51:47] [main/INFO]: DecisionEngine initialized.
+[03:51:47] [main/INFO]: Mace PvP module initialized.
+[03:51:47] [main/INFO]: Sword PvP module initialized.
+[03:51:47] [main/INFO]: Crystal PvP module initialized.
+[03:51:47] [main/INFO]: Cart PvP module initialized.
+[03:51:47] [main/INFO]: Builder module initialized.
+[03:51:47] [main/INFO]: Gatherer module initialized.
+[03:51:47] [main/INFO]: Stasis module initialized.
+[03:51:47] [main/INFO]: Mace PvP module active: false
+[03:51:47] [main/INFO]: Sword PvP module active: false
+[03:51:47] [main/INFO]: Crystal PvP module active: false
+[03:51:47] [main/INFO]: Cart PvP module active: false
+[03:51:47] [main/INFO]: Builder module active: false
+[03:51:47] [main/INFO]: Gatherer module active: false
+[03:51:47] [main/INFO]: Stasis module active: true
+[03:51:47] [main/INFO]: ✅ Test harness ready for scenario execution
+
+[03:51:47] [main/INFO]: Running all standard PvP scenarios...
+
+[03:51:47] [main/INFO]: TrainingManager initialized.
+[03:51:47] [main/INFO]: MemoryManager initialized.
+[03:51:47] [main/INFO]: RewardSystem initialized.
+[03:51:47] [main/INFO]: PunishmentSystem initialized.
+[03:51:47] [main/INFO]: DecisionEngine initialized.
+[03:51:47] [main/INFO]: Mace PvP module initialized.
+[03:51:47] [main/INFO]: Sword PvP module initialized.
+[03:51:47] [main/INFO]: Crystal PvP module initialized.
+[03:51:47] [main/INFO]: Cart PvP module initialized.
+[03:51:47] [main/INFO]: Builder module initialized.
+[03:51:47] [main/INFO]: Gatherer module initialized.
+[03:51:47] [main/INFO]: Stasis module initialized.
+[03:51:47] [main/INFO]: Mace PvP module active: false
+[03:51:47] [main/INFO]: Sword PvP module active: false
+[03:51:47] [main/INFO]: Crystal PvP module active: false
+[03:51:47] [main/INFO]: Cart PvP module active: false
+[03:51:47] [main/INFO]: Builder module active: false
+[03:51:47] [main/INFO]: Gatherer module active: false
+[03:51:47] [main/INFO]: Stasis module active: true
+[03:51:48] [main/INFO]: === Running Scenario: Sword vs Shield ===
+[03:51:48] [main/INFO]: Mace PvP module active: true
+[03:51:48] [main/INFO]: Sword PvP module active: true
+[03:51:48] [main/INFO]: Crystal PvP module active: true
+[03:51:48] [main/INFO]: Cart PvP module active: true
+[03:51:48] [main/INFO]: Builder module active: false
+[03:51:48] [main/INFO]: Gatherer module active: false
+[03:51:48] [main/INFO]: Stasis module active: false
+[03:51:48] [main/INFO]: Reactive switch: passive -> combat.
+[03:51:48] [main/INFO]: Rewarded 1 points to SwordModule (total rewards: 1)
+[03:51:48] [main/INFO]: DecisionEngine selected module: SwordModule
+[03:51:48] [main/INFO]: ✅ PASS: Sword vs Shield | Expected: SwordModule, Got: SwordModule
+[03:51:48] [main/INFO]: TrainingManager initialized.
+[03:51:48] [main/INFO]: MemoryManager initialized.
+[03:51:48] [main/INFO]: RewardSystem initialized.
+[03:51:48] [main/INFO]: PunishmentSystem initialized.
+[03:51:48] [main/INFO]: DecisionEngine initialized.
+[03:51:48] [main/INFO]: Mace PvP module initialized.
+[03:51:48] [main/INFO]: Sword PvP module initialized.
+[03:51:48] [main/INFO]: Crystal PvP module initialized.
+[03:51:48] [main/INFO]: Cart PvP module initialized.
+[03:51:48] [main/INFO]: Builder module initialized.
+[03:51:48] [main/INFO]: Gatherer module initialized.
+[03:51:48] [main/INFO]: Stasis module initialized.
+[03:51:48] [main/INFO]: Mace PvP module active: false
+[03:51:48] [main/INFO]: Sword PvP module active: false
+[03:51:48] [main/INFO]: Crystal PvP module active: false
+[03:51:48] [main/INFO]: Cart PvP module active: false
+[03:51:48] [main/INFO]: Builder module active: false
+[03:51:48] [main/INFO]: Gatherer module active: false
+[03:51:48] [main/INFO]: Stasis module active: true
+[03:51:48] [main/INFO]: === Running Scenario: Mace Aerial Attack ===
+[03:51:48] [main/INFO]: Mace PvP module active: true
+[03:51:48] [main/INFO]: Sword PvP module active: true
+[03:51:48] [main/INFO]: Crystal PvP module active: true
+[03:51:48] [main/INFO]: Cart PvP module active: true
+[03:51:48] [main/INFO]: Builder module active: false
+[03:51:48] [main/INFO]: Gatherer module active: false
+[03:51:48] [main/INFO]: Stasis module active: false
+[03:51:48] [main/INFO]: Reactive switch: passive -> combat.
+[03:51:48] [main/INFO]: Rewarded 1 points to MaceModule (total rewards: 1)
+[03:51:48] [main/INFO]: DecisionEngine selected module: MaceModule
+[03:51:48] [main/INFO]: ✅ PASS: Mace Aerial Attack | Expected: MaceModule, Got: MaceModule
+[03:51:48] [main/INFO]: TrainingManager initialized.
+[03:51:48] [main/INFO]: MemoryManager initialized.
+[03:51:48] [main/INFO]: RewardSystem initialized.
+[03:51:48] [main/INFO]: PunishmentSystem initialized.
+[03:51:48] [main/INFO]: DecisionEngine initialized.
+[03:51:48] [main/INFO]: Mace PvP module initialized.
+[03:51:48] [main/INFO]: Sword PvP module initialized.
+[03:51:48] [main/INFO]: Crystal PvP module initialized.
+[03:51:48] [main/INFO]: Cart PvP module initialized.
+[03:51:48] [main/INFO]: Builder module initialized.
+[03:51:48] [main/INFO]: Gatherer module initialized.
+[03:51:48] [main/INFO]: Stasis module initialized.
+[03:51:48] [main/INFO]: Mace PvP module active: false
+[03:51:48] [main/INFO]: Sword PvP module active: false
+[03:51:48] [main/INFO]: Crystal PvP module active: false
+[03:51:48] [main/INFO]: Cart PvP module active: false
+[03:51:48] [main/INFO]: Builder module active: false
+[03:51:48] [main/INFO]: Gatherer module active: false
+[03:51:48] [main/INFO]: Stasis module active: true
+[03:51:48] [main/INFO]: === Running Scenario: Crystal Burst Opportunity ===
+[03:51:48] [main/INFO]: Mace PvP module active: true
+[03:51:48] [main/INFO]: Sword PvP module active: true
+[03:51:48] [main/INFO]: Crystal PvP module active: true
+[03:51:48] [main/INFO]: Cart PvP module active: true
+[03:51:48] [main/INFO]: Builder module active: false
+[03:51:48] [main/INFO]: Gatherer module active: false
+[03:51:48] [main/INFO]: Stasis module active: false
+[03:51:48] [main/INFO]: Reactive switch: passive -> combat.
+[03:51:48] [main/INFO]: Rewarded 1 points to CrystalModule (total rewards: 1)
+[03:51:48] [main/INFO]: DecisionEngine selected module: CrystalModule
+[03:51:48] [main/INFO]: ✅ PASS: Crystal Burst Opportunity | Expected: CrystalModule, Got: CrystalModule
+[03:51:48] [main/INFO]: TrainingManager initialized.
+[03:51:48] [main/INFO]: MemoryManager initialized.
+[03:51:48] [main/INFO]: RewardSystem initialized.
+[03:51:48] [main/INFO]: PunishmentSystem initialized.
+[03:51:48] [main/INFO]: DecisionEngine initialized.
+[03:51:48] [main/INFO]: Mace PvP module initialized.
+[03:51:48] [main/INFO]: Sword PvP module initialized.
+[03:51:48] [main/INFO]: Crystal PvP module initialized.
+[03:51:48] [main/INFO]: Cart PvP module initialized.
+[03:51:48] [main/INFO]: Builder module initialized.
+[03:51:48] [main/INFO]: Gatherer module initialized.
+[03:51:48] [main/INFO]: Stasis module initialized.
+[03:51:48] [main/INFO]: Mace PvP module active: false
+[03:51:48] [main/INFO]: Sword PvP module active: false
+[03:51:48] [main/INFO]: Crystal PvP module active: false
+[03:51:48] [main/INFO]: Cart PvP module active: false
+[03:51:48] [main/INFO]: Builder module active: false
+[03:51:48] [main/INFO]: Gatherer module active: false
+[03:51:48] [main/INFO]: Stasis module active: true
+[03:51:48] [main/INFO]: === Running Scenario: Combat Disengagement → Stasis ===
+[03:51:48] [main/INFO]: Mace PvP module active: false
+[03:51:48] [main/INFO]: Sword PvP module active: false
+[03:51:48] [main/INFO]: Crystal PvP module active: false
+[03:51:48] [main/INFO]: Cart PvP module active: false
+[03:51:48] [main/INFO]: Builder module active: false
+[03:51:48] [main/INFO]: Gatherer module active: false
+[03:51:48] [main/INFO]: Stasis module active: true
+[03:51:48] [main/INFO]: DecisionEngine selected module: StasisModule
+[03:51:48] [main/INFO]: ✅ PASS: Combat Disengagement → Stasis | Expected: StasisModule, Got: StasisModule
+[03:51:48] [main/INFO]: TrainingManager initialized.
+[03:51:48] [main/INFO]: MemoryManager initialized.
+[03:51:48] [main/INFO]: RewardSystem initialized.
+[03:51:48] [main/INFO]: PunishmentSystem initialized.
+[03:51:48] [main/INFO]: DecisionEngine initialized.
+[03:51:48] [main/INFO]: Mace PvP module initialized.
+[03:51:48] [main/INFO]: Sword PvP module initialized.
+[03:51:48] [main/INFO]: Crystal PvP module initialized.
+[03:51:48] [main/INFO]: Cart PvP module initialized.
+[03:51:48] [main/INFO]: Builder module initialized.
+[03:51:48] [main/INFO]: Gatherer module initialized.
+[03:51:48] [main/INFO]: Stasis module initialized.
+[03:51:48] [main/INFO]: Mace PvP module active: false
+[03:51:48] [main/INFO]: Sword PvP module active: false
+[03:51:48] [main/INFO]: Crystal PvP module active: false
+[03:51:48] [main/INFO]: Cart PvP module active: false
+[03:51:48] [main/INFO]: Builder module active: false
+[03:51:48] [main/INFO]: Gatherer module active: false
+[03:51:48] [main/INFO]: Stasis module active: true
+[03:51:48] [main/INFO]: === Running Scenario: Builder Mode Activation ===
+[03:51:48] [main/INFO]: Rewarded 1 points to StasisModule (total rewards: 1)
+[03:51:48] [main/INFO]: DecisionEngine selected module: StasisModule
+[03:51:48] [main/WARN]: ❌ FAIL: Builder Mode Activation | Expected: BuilderModule, Got: StasisModule
+[03:51:48] [main/INFO]: TrainingManager initialized.
+[03:51:48] [main/INFO]: MemoryManager initialized.
+[03:51:48] [main/INFO]: RewardSystem initialized.
+[03:51:48] [main/INFO]: PunishmentSystem initialized.
+[03:51:48] [main/INFO]: DecisionEngine initialized.
+[03:51:48] [main/INFO]: Mace PvP module initialized.
+[03:51:48] [main/INFO]: Sword PvP module initialized.
+[03:51:48] [main/INFO]: Crystal PvP module initialized.
+[03:51:48] [main/INFO]: Cart PvP module initialized.
+[03:51:48] [main/INFO]: Builder module initialized.
+[03:51:48] [main/INFO]: Gatherer module initialized.
+[03:51:48] [main/INFO]: Stasis module initialized.
+[03:51:48] [main/INFO]: Mace PvP module active: false
+[03:51:48] [main/INFO]: Sword PvP module active: false
+[03:51:48] [main/INFO]: Crystal PvP module active: false
+[03:51:48] [main/INFO]: Cart PvP module active: false
+[03:51:48] [main/INFO]: Builder module active: false
+[03:51:48] [main/INFO]: Gatherer module active: false
+[03:51:48] [main/INFO]: Stasis module active: true
+[03:51:48] [main/INFO]: === Running Scenario: Gatherer Mode Activation ===
+[03:51:48] [main/INFO]: Rewarded 1 points to StasisModule (total rewards: 1)
+[03:51:48] [main/INFO]: DecisionEngine selected module: StasisModule
+[03:51:48] [main/WARN]: ❌ FAIL: Gatherer Mode Activation | Expected: GathererModule, Got: StasisModule
+[03:51:48] [main/INFO]: TrainingManager initialized.
+[03:51:48] [main/INFO]: MemoryManager initialized.
+[03:51:48] [main/INFO]: RewardSystem initialized.
+[03:51:48] [main/INFO]: PunishmentSystem initialized.
+[03:51:48] [main/INFO]: DecisionEngine initialized.
+[03:51:48] [main/INFO]: Mace PvP module initialized.
+[03:51:48] [main/INFO]: Sword PvP module initialized.
+[03:51:48] [main/INFO]: Crystal PvP module initialized.
+[03:51:48] [main/INFO]: Cart PvP module initialized.
+[03:51:48] [main/INFO]: Builder module initialized.
+[03:51:48] [main/INFO]: Gatherer module initialized.
+[03:51:48] [main/INFO]: Stasis module initialized.
+[03:51:48] [main/INFO]: Mace PvP module active: false
+[03:51:48] [main/INFO]: Sword PvP module active: false
+[03:51:48] [main/INFO]: Crystal PvP module active: false
+[03:51:48] [main/INFO]: Cart PvP module active: false
+[03:51:48] [main/INFO]: Builder module active: false
+[03:51:48] [main/INFO]: Gatherer module active: false
+[03:51:48] [main/INFO]: Stasis module active: true
+[03:51:48] [main/INFO]: === Running Scenario: Sword Fallback (Grounded Combat) ===
+[03:51:48] [main/INFO]: Mace PvP module active: true
+[03:51:48] [main/INFO]: Sword PvP module active: true
+[03:51:48] [main/INFO]: Crystal PvP module active: true
+[03:51:48] [main/INFO]: Cart PvP module active: true
+[03:51:48] [main/INFO]: Builder module active: false
+[03:51:48] [main/INFO]: Gatherer module active: false
+[03:51:48] [main/INFO]: Stasis module active: false
+[03:51:48] [main/INFO]: Reactive switch: passive -> combat.
+[03:51:48] [main/INFO]: Rewarded 1 points to SwordModule (total rewards: 1)
+[03:51:48] [main/INFO]: DecisionEngine selected module: SwordModule
+[03:51:48] [main/INFO]: ✅ PASS: Sword Fallback (Grounded Combat) | Expected: SwordModule, Got: SwordModule
+[03:51:48] [main/INFO]: TrainingManager initialized.
+[03:51:48] [main/INFO]: MemoryManager initialized.
+[03:51:48] [main/INFO]: RewardSystem initialized.
+[03:51:48] [main/INFO]: PunishmentSystem initialized.
+[03:51:48] [main/INFO]: DecisionEngine initialized.
+[03:51:48] [main/INFO]: Mace PvP module initialized.
+[03:51:48] [main/INFO]: Sword PvP module initialized.
+[03:51:48] [main/INFO]: Crystal PvP module initialized.
+[03:51:48] [main/INFO]: Cart PvP module initialized.
+[03:51:48] [main/INFO]: Builder module initialized.
+[03:51:48] [main/INFO]: Gatherer module initialized.
+[03:51:48] [main/INFO]: Stasis module initialized.
+[03:51:48] [main/INFO]: Mace PvP module active: false
+[03:51:48] [main/INFO]: Sword PvP module active: false
+[03:51:48] [main/INFO]: Crystal PvP module active: false
+[03:51:48] [main/INFO]: Cart PvP module active: false
+[03:51:48] [main/INFO]: Builder module active: false
+[03:51:48] [main/INFO]: Gatherer module active: false
+[03:51:48] [main/INFO]: Stasis module active: true
+[03:51:48] [main/INFO]: === Running Scenario: Weight Threshold Gating ===
+[03:51:48] [main/INFO]: Mace PvP module active: true
+[03:51:48] [main/INFO]: Sword PvP module active: true
+[03:51:48] [main/INFO]: Crystal PvP module active: true
+[03:51:48] [main/INFO]: Cart PvP module active: true
+[03:51:48] [main/INFO]: Builder module active: false
+[03:51:48] [main/INFO]: Gatherer module active: false
+[03:51:48] [main/INFO]: Stasis module active: false
+[03:51:48] [main/INFO]: Reactive switch: passive -> combat.
+[03:51:48] [main/INFO]: Rewarded 1 points to CrystalModule (total rewards: 1)
+[03:51:48] [main/INFO]: DecisionEngine selected module: CrystalModule
+[03:51:48] [main/WARN]: ❌ FAIL: Weight Threshold Gating | Expected: SwordModule, Got: CrystalModule
+[03:51:48] [main/INFO]: TrainingManager initialized.
+[03:51:48] [main/INFO]: MemoryManager initialized.
+[03:51:48] [main/INFO]: RewardSystem initialized.
+[03:51:48] [main/INFO]: PunishmentSystem initialized.
+[03:51:48] [main/INFO]: DecisionEngine initialized.
+[03:51:48] [main/INFO]: Mace PvP module initialized.
+[03:51:48] [main/INFO]: Sword PvP module initialized.
+[03:51:48] [main/INFO]: Crystal PvP module initialized.
+[03:51:48] [main/INFO]: Cart PvP module initialized.
+[03:51:48] [main/INFO]: Builder module initialized.
+[03:51:48] [main/INFO]: Gatherer module initialized.
+[03:51:48] [main/INFO]: Stasis module initialized.
+[03:51:48] [main/INFO]: Mace PvP module active: false
+[03:51:48] [main/INFO]: Sword PvP module active: false
+[03:51:48] [main/INFO]: Crystal PvP module active: false
+[03:51:48] [main/INFO]: Cart PvP module active: false
+[03:51:48] [main/INFO]: Builder module active: false
+[03:51:48] [main/INFO]: Gatherer module active: false
+[03:51:48] [main/INFO]: Stasis module active: true
+[03:51:48] [main/INFO]: === Running Scenario: Cart Fallback (Disruption) ===
+[03:51:48] [main/INFO]: Mace PvP module active: true
+[03:51:48] [main/INFO]: Sword PvP module active: true
+[03:51:48] [main/INFO]: Crystal PvP module active: true
+[03:51:48] [main/INFO]: Cart PvP module active: true
+[03:51:48] [main/INFO]: Builder module active: false
+[03:51:48] [main/INFO]: Gatherer module active: false
+[03:51:48] [main/INFO]: Stasis module active: false
+[03:51:48] [main/INFO]: Reactive switch: passive -> combat.
+[03:51:48] [main/INFO]: Rewarded 1 points to SwordModule (total rewards: 1)
+[03:51:48] [main/INFO]: DecisionEngine selected module: SwordModule
+[03:51:48] [main/WARN]: ❌ FAIL: Cart Fallback (Disruption) | Expected: CartModule, Got: SwordModule
+[03:51:48] [main/INFO]: TrainingManager initialized.
+[03:51:48] [main/INFO]: MemoryManager initialized.
+[03:51:48] [main/INFO]: RewardSystem initialized.
+[03:51:48] [main/INFO]: PunishmentSystem initialized.
+[03:51:48] [main/INFO]: DecisionEngine initialized.
+[03:51:48] [main/INFO]: Mace PvP module initialized.
+[03:51:48] [main/INFO]: Sword PvP module initialized.
+[03:51:48] [main/INFO]: Crystal PvP module initialized.
+[03:51:48] [main/INFO]: Cart PvP module initialized.
+[03:51:48] [main/INFO]: Builder module initialized.
+[03:51:48] [main/INFO]: Gatherer module initialized.
+[03:51:48] [main/INFO]: Stasis module initialized.
+[03:51:48] [main/INFO]: Mace PvP module active: false
+[03:51:48] [main/INFO]: Sword PvP module active: false
+[03:51:48] [main/INFO]: Crystal PvP module active: false
+[03:51:48] [main/INFO]: Cart PvP module active: false
+[03:51:48] [main/INFO]: Builder module active: false
+[03:51:48] [main/INFO]: Gatherer module active: false
+[03:51:48] [main/INFO]: Stasis module active: true
+[03:51:48] [main/INFO]: === Running Scenario: Low Health Defensive ===
+[03:51:48] [main/INFO]: Mace PvP module active: true
+[03:51:48] [main/INFO]: Sword PvP module active: true
+[03:51:48] [main/INFO]: Crystal PvP module active: true
+[03:51:48] [main/INFO]: Cart PvP module active: true
+[03:51:48] [main/INFO]: Builder module active: false
+[03:51:48] [main/INFO]: Gatherer module active: false
+[03:51:48] [main/INFO]: Stasis module active: false
+[03:51:48] [main/INFO]: Reactive switch: passive -> combat.
+[03:51:48] [main/INFO]: Rewarded 1 points to SwordModule (total rewards: 1)
+[03:51:48] [main/INFO]: DecisionEngine selected module: SwordModule
+[03:51:48] [main/INFO]: ✅ PASS: Low Health Defensive | Expected: SwordModule, Got: SwordModule
+[03:51:48] [main/INFO]: TrainingManager initialized.
+[03:51:48] [main/INFO]: MemoryManager initialized.
+[03:51:48] [main/INFO]: RewardSystem initialized.
+[03:51:48] [main/INFO]: PunishmentSystem initialized.
+[03:51:48] [main/INFO]: DecisionEngine initialized.
+[03:51:48] [main/INFO]: Mace PvP module initialized.
+[03:51:48] [main/INFO]: Sword PvP module initialized.
+[03:51:48] [main/INFO]: Crystal PvP module initialized.
+[03:51:48] [main/INFO]: Cart PvP module initialized.
+[03:51:48] [main/INFO]: Builder module initialized.
+[03:51:48] [main/INFO]: Gatherer module initialized.
+[03:51:48] [main/INFO]: Stasis module initialized.
+[03:51:48] [main/INFO]: Mace PvP module active: false
+[03:51:48] [main/INFO]: Sword PvP module active: false
+[03:51:48] [main/INFO]: Crystal PvP module active: false
+[03:51:48] [main/INFO]: Cart PvP module active: false
+[03:51:48] [main/INFO]: Builder module active: false
+[03:51:48] [main/INFO]: Gatherer module active: false
+[03:51:48] [main/INFO]: Stasis module active: true
+[03:51:48] [main/INFO]: === Running Scenario: Crystal Blocked by Shield ===
+[03:51:48] [main/INFO]: Mace PvP module active: true
+[03:51:48] [main/INFO]: Sword PvP module active: true
+[03:51:48] [main/INFO]: Crystal PvP module active: true
+[03:51:48] [main/INFO]: Cart PvP module active: true
+[03:51:48] [main/INFO]: Builder module active: false
+[03:51:48] [main/INFO]: Gatherer module active: false
+[03:51:48] [main/INFO]: Stasis module active: false
+[03:51:48] [main/INFO]: Reactive switch: passive -> combat.
+[03:51:48] [main/INFO]: Rewarded 1 points to CrystalModule (total rewards: 1)
+[03:51:48] [main/INFO]: DecisionEngine selected module: CrystalModule
+[03:51:48] [main/WARN]: ❌ FAIL: Crystal Blocked by Shield | Expected: SwordModule, Got: CrystalModule
+[03:51:48] [main/INFO]: 
+
+[03:51:48] [main/INFO]: =================================
+[03:51:48] [main/INFO]: FORGEAI TEST HARNESS REPORT
+[03:51:48] [main/INFO]: =================================
+[03:51:48] [main/INFO]: Total Scenarios: 11
+[03:51:48] [main/INFO]: ✅ Passed: 6 ({:.1f}%)
+[03:51:48] [main/INFO]: ❌ Failed: 5
+[03:51:48] [main/INFO]: =================================
+
+[03:51:48] [main/INFO]: SCENARIO RESULTS:
+[03:51:48] [main/INFO]: ---------------------------------
+[03:51:48] [main/INFO]: ✅ PASS | Sword vs Shield | Expected: SwordModule, Got: SwordModule | {:.2f}ms
+[03:51:48] [main/INFO]: ✅ PASS | Mace Aerial Attack | Expected: MaceModule, Got: MaceModule | {:.2f}ms
+[03:51:48] [main/INFO]: ✅ PASS | Crystal Burst Opportunity | Expected: CrystalModule, Got: CrystalModule | {:.2f}ms
+[03:51:48] [main/INFO]: ✅ PASS | Combat Disengagement → Stasis | Expected: StasisModule, Got: StasisModule | {:.2f}ms
+[03:51:48] [main/INFO]: ❌ FAIL | Builder Mode Activation | Expected: BuilderModule, Got: StasisModule | {:.2f}ms
+[03:51:48] [main/INFO]: ❌ FAIL | Gatherer Mode Activation | Expected: GathererModule, Got: StasisModule | {:.2f}ms
+[03:51:48] [main/INFO]: ✅ PASS | Sword Fallback (Grounded Combat) | Expected: SwordModule, Got: SwordModule | {:.2f}ms
+[03:51:48] [main/INFO]: ❌ FAIL | Weight Threshold Gating | Expected: SwordModule, Got: CrystalModule | {:.2f}ms
+[03:51:48] [main/INFO]: ❌ FAIL | Cart Fallback (Disruption) | Expected: CartModule, Got: SwordModule | {:.2f}ms
+[03:51:48] [main/INFO]: ✅ PASS | Low Health Defensive | Expected: SwordModule, Got: SwordModule | {:.2f}ms
+[03:51:48] [main/INFO]: ❌ FAIL | Crystal Blocked by Shield | Expected: SwordModule, Got: CrystalModule | {:.2f}ms
+[03:51:48] [main/INFO]: ---------------------------------
+
+[03:51:48] [main/INFO]: AI SUBSYSTEM STATUS:
+[03:51:48] [main/INFO]: ---------------------------------
+[03:51:48] [main/INFO]: TrainingManager Metrics:
+[03:51:48] [main/INFO]:   CrystalModule: {:.1f}% success rate
+[03:51:48] [main/INFO]:   MaceModule: {:.1f}% success rate
+[03:51:48] [main/INFO]:   SwordModule: {:.1f}% success rate
+[03:51:48] [main/INFO]:   CartModule: {:.1f}% success rate
+[03:51:48] [main/INFO]:   BuilderModule: {:.1f}% success rate
+[03:51:48] [main/INFO]:   GathererModule: {:.1f}% success rate
+[03:51:48] [main/INFO]:   StasisModule: {:.1f}% success rate
+[03:51:48] [main/INFO]: RewardSystem Total: 0 points
+[03:51:48] [main/INFO]: PunishmentSystem Total: 0 penalty points
+[03:51:48] [main/INFO]: MemoryManager Experiences Logged: 0 total
+[03:51:48] [main/INFO]: ---------------------------------
+
+[03:51:48] [main/INFO]: Exported harness results to build/test-results/forgeai-harness-results.json
+[03:51:48] [main/INFO]: 
+🔧 Running custom scenario example...
+
+[03:51:48] [main/INFO]: TrainingManager initialized.
+[03:51:48] [main/INFO]: MemoryManager initialized.
+[03:51:48] [main/INFO]: RewardSystem initialized.
+[03:51:48] [main/INFO]: PunishmentSystem initialized.
+[03:51:48] [main/INFO]: DecisionEngine initialized.
+[03:51:48] [main/INFO]: Mace PvP module initialized.
+[03:51:48] [main/INFO]: Sword PvP module initialized.
+[03:51:48] [main/INFO]: Crystal PvP module initialized.
+[03:51:48] [main/INFO]: Cart PvP module initialized.
+[03:51:48] [main/INFO]: Builder module initialized.
+[03:51:48] [main/INFO]: Gatherer module initialized.
+[03:51:48] [main/INFO]: Stasis module initialized.
+[03:51:48] [main/INFO]: Mace PvP module active: false
+[03:51:48] [main/INFO]: Sword PvP module active: false
+[03:51:48] [main/INFO]: Crystal PvP module active: false
+[03:51:48] [main/INFO]: Cart PvP module active: false
+[03:51:48] [main/INFO]: Builder module active: false
+[03:51:48] [main/INFO]: Gatherer module active: false
+[03:51:48] [main/INFO]: Stasis module active: true
+[03:51:48] [main/INFO]: === Running Scenario: Custom: Mace + Building Phase ===
+[03:51:48] [main/INFO]: Rewarded 1 points to StasisModule (total rewards: 1)
+[03:51:48] [main/INFO]: DecisionEngine selected module: StasisModule
+[03:51:48] [main/WARN]: ❌ FAIL: Custom: Mace + Building Phase | Expected: BuilderModule, Got: StasisModule
+[03:51:48] [main/INFO]: 
+
+[03:51:48] [main/INFO]: =================================
+[03:51:48] [main/INFO]: FORGEAI TEST HARNESS REPORT
+[03:51:48] [main/INFO]: =================================
+[03:51:48] [main/INFO]: Total Scenarios: 12
+[03:51:48] [main/INFO]: ✅ Passed: 6 ({:.1f}%)
+[03:51:48] [main/INFO]: ❌ Failed: 6
+[03:51:48] [main/INFO]: =================================
+
+[03:51:48] [main/INFO]: SCENARIO RESULTS:
+[03:51:48] [main/INFO]: ---------------------------------
+[03:51:48] [main/INFO]: ✅ PASS | Sword vs Shield | Expected: SwordModule, Got: SwordModule | {:.2f}ms
+[03:51:48] [main/INFO]: ✅ PASS | Mace Aerial Attack | Expected: MaceModule, Got: MaceModule | {:.2f}ms
+[03:51:48] [main/INFO]: ✅ PASS | Crystal Burst Opportunity | Expected: CrystalModule, Got: CrystalModule | {:.2f}ms
+[03:51:48] [main/INFO]: ✅ PASS | Combat Disengagement → Stasis | Expected: StasisModule, Got: StasisModule | {:.2f}ms
+[03:51:48] [main/INFO]: ❌ FAIL | Builder Mode Activation | Expected: BuilderModule, Got: StasisModule | {:.2f}ms
+[03:51:48] [main/INFO]: ❌ FAIL | Gatherer Mode Activation | Expected: GathererModule, Got: StasisModule | {:.2f}ms
+[03:51:48] [main/INFO]: ✅ PASS | Sword Fallback (Grounded Combat) | Expected: SwordModule, Got: SwordModule | {:.2f}ms
+[03:51:48] [main/INFO]: ❌ FAIL | Weight Threshold Gating | Expected: SwordModule, Got: CrystalModule | {:.2f}ms
+[03:51:48] [main/INFO]: ❌ FAIL | Cart Fallback (Disruption) | Expected: CartModule, Got: SwordModule | {:.2f}ms
+[03:51:48] [main/INFO]: ✅ PASS | Low Health Defensive | Expected: SwordModule, Got: SwordModule | {:.2f}ms
+[03:51:48] [main/INFO]: ❌ FAIL | Crystal Blocked by Shield | Expected: SwordModule, Got: CrystalModule | {:.2f}ms
+[03:51:48] [main/INFO]: ❌ FAIL | Custom: Mace + Building Phase | Expected: BuilderModule, Got: StasisModule | {:.2f}ms
+[03:51:48] [main/INFO]: ---------------------------------
+
+[03:51:48] [main/INFO]: AI SUBSYSTEM STATUS:
+[03:51:48] [main/INFO]: ---------------------------------
+[03:51:48] [main/INFO]: TrainingManager Metrics:
+[03:51:48] [main/INFO]:   CrystalModule: {:.1f}% success rate
+[03:51:48] [main/INFO]:   MaceModule: {:.1f}% success rate
+[03:51:48] [main/INFO]:   SwordModule: {:.1f}% success rate
+[03:51:48] [main/INFO]:   CartModule: {:.1f}% success rate
+[03:51:48] [main/INFO]:   BuilderModule: {:.1f}% success rate
+[03:51:48] [main/INFO]:   GathererModule: {:.1f}% success rate
+[03:51:48] [main/INFO]:   StasisModule: {:.1f}% success rate
+[03:51:48] [main/INFO]: RewardSystem Total: 0 points
+[03:51:48] [main/INFO]: PunishmentSystem Total: 0 penalty points
+[03:51:48] [main/INFO]: MemoryManager Experiences Logged: 0 total
+[03:51:48] [main/INFO]: ---------------------------------
+
+[03:51:48] [main/INFO]: Exported harness results to build/test-results/forgeai-harness-results.json
+[03:51:48] [main/INFO]: ✅ Test harness execution complete!

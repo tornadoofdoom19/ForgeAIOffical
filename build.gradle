@@ -3,6 +3,28 @@ plugins {
 	id 'maven-publish'
 }
 
+// ---------- Test harness runner ---------------------------------
+// Adds a convenience Gradle task to run the virtual test harness main
+// class located under src/test/java so you can execute scenarios in Codespaces
+// without launching a full Minecraft server.
+tasks.register('runTestHarness', JavaExec) {
+	group = 'verification'
+	description = 'Run the ForgeAI virtual PvP test harness (com.tyler.forgeai.harness.ForgeAITestHarness)'
+
+	// Ensure test classes/resources are compiled
+	dependsOn(tasks.named('testClasses'))
+
+	// Use the test runtime classpath so the harness (under test/) can access test sources
+	classpath = sourceSets.test.runtimeClasspath
+	mainClass.set('com.tyler.forgeai.harness.ForgeAITestHarness')
+
+	// Forward any args through to the JVM
+	doFirst {
+		println "Running ForgeAI test harness..."
+	}
+}
+
+
 version = project.mod_version
 group = project.maven_group
 

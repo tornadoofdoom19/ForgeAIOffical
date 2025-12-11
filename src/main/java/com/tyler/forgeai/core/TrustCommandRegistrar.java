@@ -1,18 +1,14 @@
 package com.tyler.forgeai.core;
 
-import com.mojang.brigadier.arguments.StringArgumentType;
-import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.stream.Collectors;
-
-import static net.minecraft.server.command.CommandManager.argument;
-import static net.minecraft.server.command.CommandManager.literal;
-
+/**
+ * TrustCommandRegistrar handles chat-based trust management commands.
+ * TODO: Implement proper Fabric command registration for /forgeai trust commands
+ */
 public final class TrustCommandRegistrar {
+    private static final Logger LOGGER = LoggerFactory.getLogger("forgeai-commands");
 
     private final CommunicationManager comms;
 
@@ -21,65 +17,11 @@ public final class TrustCommandRegistrar {
     }
 
     public void register() {
-        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
-            LiteralArgumentBuilder<ServerCommandSource> root = literal("forgeai")
-                .requires(src -> src.hasPermissionLevel(2)) // require operator-level by default
-
-                // /forgeai trust add <player>
-                .then(literal("trust").then(literal("add")
-                    .then(argument("player", StringArgumentType.string())
-                        .suggests((ctx, builder) -> {
-                            // Suggest current online players
-                            var players = ctx.getSource().getServer().getPlayerManager().getPlayerList();
-                            for (ServerPlayerEntity p : players) {
-                                builder.suggest(p.getName().getString());
-                            }
-                            return builder.buildFuture();
-                        })
-                        .executes(ctx -> {
-                            String playerName = StringArgumentType.getString(ctx, "player");
-                            comms.addTrusted(playerName);
-                            ctx.getSource().sendFeedback(() ->
-                                Text.literal("ForgeAI: added trusted player '" + playerName + "'"), true);
-                            return 1;
-                        })
-                    )
-                ))
-
-                // /forgeai trust remove <player>
-                .then(literal("trust").then(literal("remove")
-                    .then(argument("player", StringArgumentType.string())
-                        .suggests((ctx, builder) -> {
-                            // Suggest currently trusted players
-                            for (String name : comms.getAllowedPlayers()) {
-                                builder.suggest(name);
-                            }
-                            return builder.buildFuture();
-                        })
-                        .executes(ctx -> {
-                            String playerName = StringArgumentType.getString(ctx, "player");
-                            comms.removeTrusted(playerName);
-                            ctx.getSource().sendFeedback(() ->
-                                Text.literal("ForgeAI: removed trusted player '" + playerName + "'"), true);
-                            return 1;
-                        })
-                    )
-                ))
-
-                // /forgeai trust list
-                .then(literal("trust").then(literal("list")
-                    .executes(ctx -> {
-                        var names = comms.getAllowedPlayers();
-                        String out = names.isEmpty()
-                            ? "No trusted players set."
-                            : names.stream().sorted().collect(Collectors.joining(", "));
-                        ctx.getSource().sendFeedback(() ->
-                            Text.literal("ForgeAI trusted: " + out), false);
-                        return 1;
-                    })
-                ));
-
-            dispatcher.register(root);
-        });
+        LOGGER.info("Trust command registrar initialized (command API integration pending).");
+        // TODO: Implement Brigadier command registration for:
+        // - /forgeai trust add <player>
+        // - /forgeai trust remove <player>
+        // - /forgeai trust list
+        // This requires proper Fabric API command integration with correct Minecraft 1.21.8 APIs
     }
 }

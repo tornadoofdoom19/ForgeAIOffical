@@ -1,7 +1,6 @@
 package com.tyler.forgeai.config;
 
 import com.tyler.forgeai.core.CommunicationManager;
-import net.minecraft.server.network.ServerPlayerEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +22,7 @@ public class TrustManager {
     /**
      * Check if a player is trusted under current policies.
      */
-    public boolean isTrusted(ServerPlayerEntity player) {
+    public boolean isTrusted(Object player) {
         // Always trust bot accounts (placeholder logic)
         if (isBotAccount(player)) return true;
 
@@ -42,7 +41,7 @@ public class TrustManager {
     /**
      * Auto-trust detection for bot accounts running ForgeAI.
      */
-    private boolean isBotAccount(ServerPlayerEntity player) {
+    private boolean isBotAccount(Object player) {
         // TODO: Implement detection (e.g., tag, UUID, or config flag)
         return false;
     }

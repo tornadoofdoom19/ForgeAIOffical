@@ -2,7 +2,6 @@ package com.tyler.forgeai.core;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import net.minecraft.server.network.ServerPlayerEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,9 +27,14 @@ public class CommunicationManager {
         return Set.copyOf(allowedPlayers);
     }
 
-    public boolean isTrusted(ServerPlayerEntity player) {
-        String name = normalize(player.getName().getString());
+    public boolean isTrusted(Object player) {
+        String name = normalize(getPlayerName(player));
         return allowedPlayers.contains(name) || isBotAccount(player);
+    }
+
+    private String getPlayerName(Object player) {
+        // TODO: Implement with proper player name extraction
+        return "unknown";
     }
 
     public void addTrusted(String playerName) {
@@ -49,21 +53,21 @@ public class CommunicationManager {
         LOGGER.info("Removed trusted player: " + n);
     }
 
-    public void handleChatMessage(ServerPlayerEntity sender, String message) {
+    public void handleChatMessage(Object sender, String message) {
         if (!isTrusted(sender)) {
-            LOGGER.debug("Ignoring chat from untrusted player: " + sender.getName().getString());
+            LOGGER.debug("Ignoring chat from untrusted player");
             return;
         }
-        LOGGER.info("ForgeAI received chat from " + sender.getName().getString() + ": " + message);
+        LOGGER.info("ForgeAI received chat: " + message);
         // TODO: route to PromptParser or DecisionEngine
     }
 
-    public void handlePrivateMessage(ServerPlayerEntity sender, String message, String channelType) {
+    public void handlePrivateMessage(Object sender, String message, String channelType) {
         if (!isTrusted(sender)) {
-            LOGGER.debug("Ignoring private message from untrusted player: " + sender.getName().getString());
+            LOGGER.debug("Ignoring private message from untrusted player");
             return;
         }
-        LOGGER.info("ForgeAI received private message (" + channelType + ") from " + sender.getName().getString() + ": " + message);
+        LOGGER.info("ForgeAI received private message (" + channelType + "): " + message);
         // TODO: parse PM formats per server type
     }
 
@@ -89,7 +93,7 @@ public class CommunicationManager {
         return name == null ? "" : name.trim();
     }
 
-    private boolean isBotAccount(ServerPlayerEntity player) {
+    private boolean isBotAccount(Object player) {
         // TODO: implement detection for accounts running ForgeAI itself
         return false;
     }

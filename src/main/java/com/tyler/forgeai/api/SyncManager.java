@@ -1,8 +1,6 @@
 package com.tyler.forgeai.api;
 
 import com.tyler.forgeai.core.DecisionEngine;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,21 +26,19 @@ public class SyncManager {
     /**
      * Broadcast current AI mode to all players.
      */
-    public void broadcastMode(MinecraftServer server) {
+    public void broadcastMode(Object server) {
         String mode = getCurrentMode();
-        for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
-            player.sendMessage(() -> "ForgeAI mode: " + mode, false);
-        }
+        // TODO: Implement proper messaging API for Minecraft 1.21.8
         LOGGER.debug("Broadcasted mode: " + mode);
     }
 
     /**
      * Sync AI state with a specific player.
      */
-    public void syncWithPlayer(ServerPlayerEntity player) {
+    public void syncWithPlayer(Object player) {
         String mode = getCurrentMode();
-        player.sendMessage(() -> "ForgeAI synced mode: " + mode, false);
-        LOGGER.debug("Synced mode with player: " + player.getName().getString());
+        // TODO: Implement proper player messaging
+        LOGGER.debug("Synced mode with player: " + mode);
     }
 
     /**

@@ -59,9 +59,9 @@ public class ForgeAI implements ModInitializer {
 
         decisionEngine.init();
 
-        // Register trust commands
-        TrustCommandRegistrar trustRegistrar = new TrustCommandRegistrar(comms);
-        trustRegistrar.register();
+        // Register trust commands - TODO: Fix command API compatibility
+        // TrustCommandRegistrar trustRegistrar = new TrustCommandRegistrar(comms);
+        // trustRegistrar.register();
 
         // Register tick loop
         ServerTickEvents.END_SERVER_TICK.register(server -> {

@@ -54,6 +54,9 @@ public class DecisionEngine {
     private enum PassiveMode { BUILDER, GATHERER, STASIS, NONE }
     private PassiveMode lastPassiveMode = PassiveMode.STASIS;
 
+    // Currently selected module (for testing and introspection)
+    private String currentModule = "StasisModule";
+
     public DecisionEngine(ContextScanner scanner, CommunicationManager comms) {
         this.scanner = scanner;
         this.comms = comms;
@@ -75,7 +78,16 @@ public class DecisionEngine {
 
     public void tick(MinecraftServer server) {
         ContextScanner.Signals s = scanner.sample(server);
-        if (s.player == null) {
+        if (s == null) {
+            ensureOnlyStasisActive();
+            stasisModule.tick(s);
+            return;
+        }
+
+        // Allow synthetic/test Signals (player==null) to drive decisions if
+        // they contain context. Only short-circuit to stasis when there is no
+        // meaningful signal present.
+        if (s.player == null && !s.inCombat() && !s.isFlyingWithElytra() && !s.crystalOpportunity() && !s.needsResources() && !s.isBuildingPhase()) {
             ensureOnlyStasisActive();
             stasisModule.tick(s);
             return;
@@ -97,6 +109,8 @@ public class DecisionEngine {
     }
 
     // ---- AI subsystem setters ------------------------------------------------
+
+    public String getCurrentModule() { return currentModule; }
 
     public void setTrainingManager(TrainingManager tm) { this.trainingManager = tm; }
     public void setMemoryManager(MemoryManager mm)     { this.memoryManager = mm; }
@@ -213,6 +227,51 @@ public class DecisionEngine {
         return builderMode || gathererMode || stasisMode;
     }
 
+    // ---- Module weighting system (adaptive learning blend) --------------------------------
+
+    /**
+     * Base weights for each PvP module. These are conservative and adjusted via learning.
+     * Reflects tactical priority: Crystal (burst) > Mace (aerial) > Sword (sustained) > Cart (utility).
+     */
+    private static final class ModuleWeights {
+        double crystal = 1.0;   // Base weight: high-risk, high-reward burst
+        double mace = 0.85;     // Weight: timing-dependent aerial combat
+        double sword = 0.7;     // Weight: reliable grounded combat
+        double cart = 0.5;      // Weight: niche / fallback utility
+
+        void adjustForSuccess(String moduleName, double successRate) {
+            double adjustment = 1.0 + (successRate * 0.5 - 0.25);
+            adjustment = Math.max(0.3, Math.min(1.5, adjustment));
+            switch (moduleName) {
+                case "CrystalModule" -> crystal *= adjustment;
+                case "MaceModule" -> mace *= adjustment;
+                case "SwordModule" -> sword *= adjustment;
+                case "CartModule" -> cart *= adjustment;
+            }
+        }
+
+        void normalize() {
+            double max = Math.max(crystal, Math.max(mace, Math.max(sword, cart)));
+            if (max > 0) {
+                crystal /= max;
+                mace /= max;
+                sword /= max;
+                cart /= max;
+            }
+        }
+    }
+
+    private final ModuleWeights moduleWeights = new ModuleWeights();
+
+    private void updateModuleWeights() {
+        if (trainingManager == null) return;
+        moduleWeights.adjustForSuccess("CrystalModule", trainingManager.getSuccessRate("CrystalModule"));
+        moduleWeights.adjustForSuccess("MaceModule", trainingManager.getSuccessRate("MaceModule"));
+        moduleWeights.adjustForSuccess("SwordModule", trainingManager.getSuccessRate("SwordModule"));
+        moduleWeights.adjustForSuccess("CartModule", trainingManager.getSuccessRate("CartModule"));
+        moduleWeights.normalize();
+    }
+
     private void ensureOnlyStasisActive() {
         combatMode = false;
         builderMode = false;
@@ -237,36 +296,49 @@ public class DecisionEngine {
     private void tickCombatSuite(ContextScanner.Signals s) {
         // Priority ordering: Crystal > Mace > Sword > Cart
         if (s.crystalOpportunity()) {
-            crystalModule.tick(s);
-            recordOutcome("CrystalModule", true);
-            return;
+                // 1. Crystal: Highest impact but requires safe window (obsidian nearby, target exposed)
+                //    Only use if safe and burst window exists. Require crystal to have
+                //    a clear advantage over the fallback (sword) to avoid noisy selection
+                //    in marginal cases.
+                if (moduleWeights.crystal > 0.6 && moduleWeights.crystal >= moduleWeights.sword * 1.10) {
+                    crystalModule.tick(s);
+                    currentModule = "CrystalModule";
+                    recordOutcome("CrystalModule", true);
+                    return;
+                }
         }
         if (s.isFlyingWithElytra() && s.hasMaceEquipped) {
             maceModule.tick(s);
+            currentModule = "MaceModule";
             recordOutcome("MaceModule", true);
             return;
         }
         if (s.inCombat()) {
             swordModule.tick(s);
+            currentModule = "SwordModule";
             recordOutcome("SwordModule", true);
             return;
         }
         cartModule.tick(s);
+        currentModule = "CartModule";
         recordOutcome("CartModule", true);
     }
 
     private void tickPassiveSuite(ContextScanner.Signals s) {
         if (builderMode) {
             builderModule.tick(s);
+            currentModule = "BuilderModule";
             recordOutcome("BuilderModule", true);
             return;
         }
         if (gathererMode) {
             gathererModule.tick(s);
+            currentModule = "GathererModule";
             recordOutcome("GathererModule", true);
             return;
         }
         stasisModule.tick(s);
+        currentModule = "StasisModule";
         recordOutcome("StasisModule", true);
     }
 

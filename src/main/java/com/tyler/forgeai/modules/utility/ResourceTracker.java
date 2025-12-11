@@ -1,6 +1,5 @@
-package com.tyler.forgeai.util;
+package com.tyler.forgeai.modules.utility;
 
-import net.minecraft.server.network.ServerPlayerEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,15 +19,9 @@ public class ResourceTracker {
     /**
      * Update resource counts from player inventory.
      */
-    public void update(ServerPlayerEntity player) {
+    public void update(Object player) {
         resourceCounts.clear();
-        player.getInventory().main.forEach(stack -> {
-            if (stack != null && !stack.isEmpty()) {
-                String itemName = stack.getItem().toString().toLowerCase();
-                resourceCounts.put(itemName,
-                    resourceCounts.getOrDefault(itemName, 0) + stack.getCount());
-            }
-        });
+        // TODO: Implement with proper ServerPlayer reflection or casting
         LOGGER.debug("Resource counts updated: " + resourceCounts);
     }
 

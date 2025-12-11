@@ -16,10 +16,10 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "com.tyler.forgeai.core.ForgeAI"
+      "com.tyler.forgeai.ForgeAI"
     ],
     "client": [
-      "com.tyler.forgeai.core.ForgeAIClient"
+      "com.tyler.forgeai.ForgeAIClient"
     ]
   },
   "mixins": [
