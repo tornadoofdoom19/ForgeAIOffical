@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "id": "forgeai",
+  "version": "${version}",
+  "name": "ForgeAI",
+  "description": "ForgeAI — an AI bot ecosystem for Minecraft 1.21.8, specializing in aerial mace PvP, building, gathering, and stasis support.",
+  "authors": [
+    "Tyler"
+  ],
+  "contact": {
+    "homepage": "https://github.com/tyler/ForgeAI",
+    "sources": "https://github.com/tyler/ForgeAI"
+  },
+  "license": "MIT",
+  "icon": "assets/forgeai/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.tyler.forgeai.core.ForgeAI"
+    ],
+    "client": [
+      "com.tyler.forgeai.core.ForgeAIClient"
+    ]
+  },
+  "mixins": [
+    "forgeai.mixins.json",
+    {
+      "config": "forgeai.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=0.18.2",
+    "minecraft": "~1.21.8",
+    "java": ">=21",
+    "fabric-api": "*"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}
