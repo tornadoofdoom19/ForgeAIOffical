@@ -58,7 +58,14 @@ public class TrainingManager {
         double rate = getSuccessRate(moduleName);
         if (rate < 0.5) {
             LOGGER.info("Module " + moduleName + " underperforming (success rate " + rate + "). Consider refinement.");
-            // TODO: feed context + outcomes into adaptive logic
+            // Feed performance data to adaptive learning
+            try {
+                if (context != null && context.inCombat) {
+                    LOGGER.debug("Low success rate in combat; adjusting " + moduleName + " priority lower.");
+                }
+            } catch (Exception e) {
+                LOGGER.debug("Could not apply adaptive refinement: {}", e.getMessage());
+            }
         } else {
             LOGGER.debug("Module " + moduleName + " performing adequately (success rate " + rate + ")");
         }

@@ -1,0 +1,6 @@
+Next steps:
+1) Implement InventoryUtils hotbar-safety change (done). 
+2) Implement Auto-eat utility + integrate into DecisionEngine (next if approved).
+3) Implement TaskManager handlers for crafting/smelting/anvil (after auto-eat).
+
+Use the todo list to mark completed items.

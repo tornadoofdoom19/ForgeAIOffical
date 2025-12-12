@@ -21,7 +21,19 @@ public class ResourceTracker {
      */
     public void update(Object player) {
         resourceCounts.clear();
-        // TODO: Implement with proper ServerPlayer reflection or casting
+        try {
+            if (player instanceof net.minecraft.server.level.ServerPlayer sp) {
+                var inv = sp.getInventory();
+                for (int i = 0; i < inv.getContainerSize(); i++) {
+                    net.minecraft.world.item.ItemStack stack = inv.getItem(i);
+                    if (stack == null || stack.isEmpty()) continue;
+                    String name = stack.getItem().toString().toLowerCase();
+                    resourceCounts.put(name, resourceCounts.getOrDefault(name, 0) + stack.getCount());
+                }
+            }
+        } catch (Exception e) {
+            LOGGER.debug("Resource update failed: {}", e.getMessage());
+        }
         LOGGER.debug("Resource counts updated: " + resourceCounts);
     }
 

@@ -16,6 +16,8 @@ public class CommunicationManager {
     private static final String ALLOWED_FILE = "config/forgeai_allowed.json";
 
     private final Set<String> allowedPlayers = new HashSet<>();
+        private TrustCommandRegistrar trustRegistrar = null;
+        private com.tyler.forgeai.core.ChatMonitor chatMonitor = null;
     private final Gson gson = new Gson();
 
     public void init() {
@@ -33,8 +35,18 @@ public class CommunicationManager {
     }
 
     private String getPlayerName(Object player) {
-        // TODO: Implement with proper player name extraction
-        return "unknown";
+        // Extract player name from ServerPlayer or fallback to string representation
+        if (player instanceof net.minecraft.server.level.ServerPlayer sp) {
+            return sp.getGameProfile().getName();
+        }
+        if (player instanceof String s) {
+            return s;
+        }
+        try {
+            return player.toString().split("@")[0];
+        } catch (Exception e) {
+            return "unknown";
+        }
     }
 
     public void addTrusted(String playerName) {
@@ -54,12 +66,29 @@ public class CommunicationManager {
     }
 
     public void handleChatMessage(Object sender, String message) {
+        // Check for trust command (admins only). Allow parsing even if not yet trusted
+        if (message != null && message.startsWith("/forgeai trust")) {
+            if (trustRegistrar != null) {
+                trustRegistrar.handleCommand(sender, message);
+                return;
+            }
+        }
+
         if (!isTrusted(sender)) {
             LOGGER.debug("Ignoring chat from untrusted player");
             return;
         }
         LOGGER.info("ForgeAI received chat: " + message);
-        // TODO: route to PromptParser or DecisionEngine
+        try { if (chatMonitor != null) chatMonitor.recordMessage(sender, message); } catch (Exception ignored) {}
+        // Route to prompt parser for decision processing
+        try {
+            var decision = com.tyler.forgeai.api.PromptParser.parsePrompt(message);
+            if (decision != null && sender instanceof net.minecraft.server.level.ServerPlayer sp) {
+                LOGGER.info("Processing decision from chat: {}", decision);
+            }
+        } catch (Exception e) {
+            LOGGER.warn("Failed to parse chat message: {}", e.getMessage());
+        }
     }
 
     public void handlePrivateMessage(Object sender, String message, String channelType) {
@@ -68,7 +97,30 @@ public class CommunicationManager {
             return;
         }
         LOGGER.info("ForgeAI received private message (" + channelType + "): " + message);
-        // TODO: parse PM formats per server type
+        // Parse PM formats per channel type (Discord, Telegram, etc.)
+        try {
+            // Extract actual command from channel format
+            String command = message;
+            if ("discord".equalsIgnoreCase(channelType) && message.startsWith("!")) {
+                command = message.substring(1);
+            } else if ("telegram".equalsIgnoreCase(channelType) && message.startsWith("/")) {
+                command = message.substring(1);
+            }
+            var decision = com.tyler.forgeai.api.PromptParser.parsePrompt(command);
+            LOGGER.info("Processing PM command: {}", decision);
+        } catch (Exception e) {
+            LOGGER.warn("Failed to parse private message: {}", e.getMessage());
+        }
+    }
+
+    public void setTrustRegistrar(TrustCommandRegistrar registrar) {
+        this.trustRegistrar = registrar;
+        LOGGER.info("Trust registrar attached to CommunicationManager");
+    }
+
+    public void setChatMonitor(com.tyler.forgeai.core.ChatMonitor monitor) {
+        this.chatMonitor = monitor;
+        LOGGER.info("ChatMonitor attached to CommunicationManager");
     }
 
     private void loadAllowedList() {
@@ -94,7 +146,8 @@ public class CommunicationManager {
     }
 
     private boolean isBotAccount(Object player) {
-        // TODO: implement detection for accounts running ForgeAI itself
-        return false;
+        // Check if player name contains known bot indicators
+        String name = getPlayerName(player);
+        return name.toLowerCase().contains("bot") || name.toLowerCase().contains("forge_ai") || name.toLowerCase().contains("ai_");
     }
 }

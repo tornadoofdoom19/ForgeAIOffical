@@ -31,8 +31,41 @@ public class CartModule {
     }
 
     private void deployCartAttack(Signals s) {
-        // TODO: implement TNT minecart placement + detonation logic
         LOGGER.info("Deploying cart-based PvP attack.");
-        // Example: place rail, spawn TNT cart, push toward opponent, detonate at optimal timing
+        try {
+            // Find nearby rail to place minecart
+            net.minecraft.core.BlockPos railPos = null;
+            for (net.minecraft.core.BlockPos pos :
+                net.minecraft.core.BlockPos.betweenClosed(
+                    s.player.blockPosition().offset(-16, -2, -16),
+                    s.player.blockPosition().offset(16, 2, 16))) {
+                var state = s.player.level().getBlockState(pos);
+                String name = state.getBlock().getName().getString().toLowerCase();
+                if (name.contains("rail")) { railPos = pos; break; }
+            }
+
+            if (railPos == null) {
+                LOGGER.info("No rail found for minecart deployment");
+                return;
+            }
+
+            // Move to rail and attempt to place minecart item
+            com.tyler.forgeai.util.PlayerActionUtils.lookAtBlock(s.player, railPos);
+            com.tyler.forgeai.util.InventoryUtils.moveItemToHotbar(s.player, "minecart");
+            com.tyler.forgeai.util.PlayerActionUtils.useMainHand(s.player, 2);
+
+            // Push toward opponent
+            var opp = s.player.level().getNearestPlayer(s.player, 64);
+            if (opp != null) {
+                com.tyler.forgeai.util.PlayerActionUtils.lookAtEntity(s.player, opp);
+                com.tyler.forgeai.util.PlayerActionUtils.moveForward(s.player, 1.0f);
+                try { Thread.sleep(400); } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
+                // Detonation: try to place TNT next to rail or use main hand again
+                com.tyler.forgeai.util.InventoryUtils.moveItemToHotbar(s.player, "tnt");
+                com.tyler.forgeai.util.PlayerActionUtils.useMainHand(s.player, 2);
+            }
+        } catch (Exception e) {
+            LOGGER.debug("Error during cart attack: {}", e.getMessage());
+        }
     }
 }

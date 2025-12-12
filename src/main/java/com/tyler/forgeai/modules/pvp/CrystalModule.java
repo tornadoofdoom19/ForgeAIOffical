@@ -32,12 +32,43 @@ public class CrystalModule {
     }
 
     private void placeCrystal(Signals s) {
-        // TODO: implement placement logic (obsidian block + end crystal item)
         LOGGER.info("Placing end crystal for PvP attack.");
+        try {
+            // Find obsidian/bedrock spot near opponent
+            var opp = s.player.level().getNearestPlayer(s.player, 64);
+            if (opp == null) return;
+            net.minecraft.core.BlockPos target = null;
+            for (net.minecraft.core.BlockPos pos :
+                net.minecraft.core.BlockPos.betweenClosed(
+                    opp.blockPosition().offset(-4, -2, -4),
+                    opp.blockPosition().offset(4, 2, 4))) {
+                var state = s.player.level().getBlockState(pos);
+                String name = state.getBlock().getName().getString().toLowerCase();
+                if (name.contains("obsidian") || name.contains("bedrock")) { target = pos; break; }
+            }
+
+            if (target == null) return;
+
+            com.tyler.forgeai.util.PlayerActionUtils.lookAtBlock(s.player, target);
+            com.tyler.forgeai.util.InventoryUtils.moveItemToHotbar(s.player, "end_crystal");
+            com.tyler.forgeai.util.PlayerActionUtils.useMainHand(s.player, 2);
+        } catch (Exception e) {
+            LOGGER.debug("Error placing crystal: {}", e.getMessage());
+        }
     }
 
     private void detonateCrystal(Signals s) {
-        // TODO: implement detonation logic (attack crystal entity at optimal timing)
         LOGGER.info("Detonating end crystal for maximum damage.");
+        try {
+            // Find nearest end crystal entity and attack it
+            var crystals = s.player.level().getEntitiesOfClass(net.minecraft.world.entity.decoration.EndCrystal.class,
+                s.player.getBoundingBox().inflate(8));
+            if (crystals == null || crystals.isEmpty()) return;
+            var crystal = crystals.get(0);
+            com.tyler.forgeai.util.PlayerActionUtils.lookAtEntity(s.player, crystal);
+            com.tyler.forgeai.util.PlayerActionUtils.attackEntity(s.player, crystal);
+        } catch (Exception e) {
+            LOGGER.debug("Error detonating crystal: {}", e.getMessage());
+        }
     }
 }

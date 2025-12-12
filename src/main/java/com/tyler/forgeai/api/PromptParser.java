@@ -49,6 +49,27 @@ public class PromptParser {
             return;
         }
 
+        // Set build location: '!setbuild x y z'
+        if (msg.startsWith("!setbuild ")) {
+            String[] parts = msg.split("\\s+");
+            if (parts.length >= 4) {
+                try {
+                    int x = Integer.parseInt(parts[1]);
+                    int y = Integer.parseInt(parts[2]);
+                    int z = Integer.parseInt(parts[3]);
+                    net.minecraft.core.BlockPos pos = new net.minecraft.core.BlockPos(x, y, z);
+                    if (decisionEngine.getTaskManager() != null) {
+                        decisionEngine.getTaskManager().setBuildLocation(pos);
+                        decisionEngine.enableBuilderMode(true);
+                        if (context != null && context.player != null) {
+                            com.tyler.forgeai.core.CompanionChatHandler.sendChatMessage(context.player, "Build location set to " + pos.toShortString());
+                        }
+                    }
+                } catch (Exception ignored) {}
+            }
+            return;
+        }
+
         // Natural language interpretation (basic scaffolding)
         if (msg.contains("fight") || msg.contains("attack")) {
             decisionEngine.enableCombatMode(true);
@@ -60,6 +81,18 @@ public class PromptParser {
             decisionEngine.enableStasisMode(true);
         } else {
             LOGGER.debug("Unhandled prompt — no direct mode change: {}", prompt);
+        }
+    }
+
+    /**
+     * Convenience static parser for quick command extraction from chat messages.
+     */
+    public static com.tyler.forgeai.core.AICommandParser.ParsedCommand parsePrompt(String message) {
+        try {
+            return com.tyler.forgeai.core.AICommandParser.parse(message);
+        } catch (Exception e) {
+            LOGGER.debug("parsePrompt failed: {}", e.getMessage());
+            return null;
         }
     }
 }

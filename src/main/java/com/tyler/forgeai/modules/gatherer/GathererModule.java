@@ -31,7 +31,38 @@ public class GathererModule {
     }
 
     private void collectResources(Signals s) {
-        // TODO: implement resource gathering logic
+        // Best-effort gathering logic: scan for basic resources (wood, stone, ores)
+        try {
+            var player = s.player;
+            if (player == null) return;
+
+            String[] resources = new String[]{"log", "iron_ore", "coal_ore", "stone", "dirt", "oak_log", "copper_ore"};
+            boolean gatheredAny = false;
+            for (String resource : resources) {
+                // Quick scan for blocks containing the keyword
+                for (net.minecraft.core.BlockPos pos : net.minecraft.core.BlockPos.betweenClosed(
+                    player.blockPosition().offset(-16, -4, -16), player.blockPosition().offset(16, 8, 16))) {
+                    var state = player.level().getBlockState(pos);
+                    String blk = state.getBlock().getName().getString().toLowerCase();
+                    if (blk.contains(resource)) {
+                        com.tyler.forgeai.util.PlayerActionUtils.lookAtBlock(player, pos);
+                        com.tyler.forgeai.util.PlayerActionUtils.breakBlock(player, pos);
+                        gatheredAny = true;
+                        try { Thread.sleep(150); } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
+                        break;
+                    }
+                }
+                if (gatheredAny) break;
+            }
+
+            if (!gatheredAny) {
+                LOGGER.debug("No immediate resources found to gather");
+            } else {
+                LOGGER.info("Gathered a resource on request");
+            }
+        } catch (Exception e) {
+            LOGGER.debug("collectResources error: {}", e.getMessage());
+        }
         LOGGER.info("Collecting resources in gatherer mode.");
         // Example: mine ores, chop trees, harvest crops, ensure inventory space
     }

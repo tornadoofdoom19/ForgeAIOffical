@@ -28,6 +28,16 @@ tasks.register('runTestHarness', JavaExec) {
 version = project.mod_version
 group = project.maven_group
 
+// Specify Java 21 compatibility
+java {
+	sourceCompatibility = JavaVersion.VERSION_21
+	targetCompatibility = JavaVersion.VERSION_21
+}
+
+tasks.withType(JavaCompile).configureEach {
+	options.release = 21
+}
+
 base {
 	archivesName = project.archives_base_name
 }
@@ -60,6 +70,7 @@ dependencies {
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+	implementation 'com.google.code.gson:gson:2.10.1'
 	
 }
 

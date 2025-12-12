@@ -28,7 +28,17 @@ public class SyncManager {
      */
     public void broadcastMode(Object server) {
         String mode = getCurrentMode();
-        // TODO: Implement proper messaging API for Minecraft 1.21.8
+        // Broadcast to all online players via chat component
+        try {
+            if (server instanceof net.minecraft.server.MinecraftServer ms) {
+                var component = net.minecraft.network.chat.Component.literal("[ForgeAI] Mode: " + mode);
+                for (var player : ms.getPlayerList().getPlayers()) {
+                    player.sendSystemMessage(component);
+                }
+            }
+        } catch (Exception e) {
+            LOGGER.debug("Could not broadcast mode: {}", e.getMessage());
+        }
         LOGGER.debug("Broadcasted mode: " + mode);
     }
 
@@ -37,7 +47,15 @@ public class SyncManager {
      */
     public void syncWithPlayer(Object player) {
         String mode = getCurrentMode();
-        // TODO: Implement proper player messaging
+        // Send current mode to specific player via system message
+        try {
+            if (player instanceof net.minecraft.server.level.ServerPlayer sp) {
+                var component = net.minecraft.network.chat.Component.literal("[ForgeAI] Current mode: " + mode);
+                sp.sendSystemMessage(component);
+            }
+        } catch (Exception e) {
+            LOGGER.debug("Could not sync with player: {}", e.getMessage());
+        }
         LOGGER.debug("Synced mode with player: " + mode);
     }
 

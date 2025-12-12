@@ -57,5 +57,8 @@ public class ConfigLoader {
 
         public String logLevel = "INFO";
         public int maxTrustedPlayers = 50;
+        public boolean allowOverwriteBuilds = false;
+        public boolean allowRedstoneBuilds = false;
+        public boolean buildDryRunDefault = true;
     }
 }

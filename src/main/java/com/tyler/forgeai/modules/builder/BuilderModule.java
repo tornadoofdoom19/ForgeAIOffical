@@ -31,7 +31,23 @@ public class BuilderModule {
     }
 
     private void placeBlocks(Signals s) {
-        // TODO: implement block placement logic
+        try {
+            var player = s.player;
+            if (player == null) return;
+
+            var main = player.getMainHandItem();
+            if (main == null || main.isEmpty() || !(main.getItem() instanceof net.minecraft.world.item.BlockItem)) {
+                LOGGER.debug("No block in main hand to place");
+                return;
+            }
+
+            // Place block directly in front of player
+            net.minecraft.core.BlockPos target = player.blockPosition().offset(player.getLookAngle().x > 0 ? 1 : -1, 0, 0);
+            com.tyler.forgeai.util.PlayerActionUtils.placeBlock(player, target);
+            LOGGER.info("Placed block at {}", target.toShortString());
+        } catch (Exception e) {
+            LOGGER.debug("Builder placeBlocks error: {}", e.getMessage());
+        }
         LOGGER.info("Placing blocks in builder mode.");
         // Example: read blueprint, place blocks sequentially, ensure inventory has required materials
     }

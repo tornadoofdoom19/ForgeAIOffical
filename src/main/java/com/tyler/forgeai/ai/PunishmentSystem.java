@@ -25,7 +25,15 @@ public class PunishmentSystem {
         penaltyPoints += points;
         LOGGER.warn("Applied " + points + " penalty points to " + moduleName +
                 " (total penalties: " + penaltyPoints + ")");
-        // TODO: feed into TrainingManager or MemoryManager for corrective learning
+        // Feed penalty into training manager for corrective RL learning
+        try {
+            var trainMgr = com.tyler.forgeai.ai.TrainingManager.getInstance();
+            if (trainMgr != null) {
+                trainMgr.recordOutcome(moduleName, "penalty", -points);
+            }
+        } catch (Exception e) {
+            LOGGER.debug("Could not feed penalty to TrainingManager: {}", e.getMessage());
+        }
     }
 
     /**

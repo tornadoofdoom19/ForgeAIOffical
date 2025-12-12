@@ -42,7 +42,18 @@ public class TrustManager {
      * Auto-trust detection for bot accounts running ForgeAI.
      */
     private boolean isBotAccount(Object player) {
-        // TODO: Implement detection (e.g., tag, UUID, or config flag)
+        try {
+            if (player instanceof net.minecraft.server.level.ServerPlayer sp) {
+                String name = sp.getGameProfile().getName();
+                if (name == null) return false;
+                String lower = name.toLowerCase();
+                return lower.contains("bot") || lower.contains("ai_") || lower.contains("forgeai");
+            }
+            if (player instanceof String s) {
+                String lower = s.toLowerCase();
+                return lower.contains("bot") || lower.contains("ai_") || lower.contains("forgeai");
+            }
+        } catch (Exception ignored) {}
         return false;
     }
 

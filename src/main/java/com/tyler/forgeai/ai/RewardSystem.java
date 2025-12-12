@@ -25,7 +25,15 @@ public class RewardSystem {
         rewardPoints += points;
         LOGGER.info("Rewarded " + points + " points to " + moduleName +
                 " (total rewards: " + rewardPoints + ")");
-        // TODO: feed into TrainingManager or MemoryManager for reinforcement
+        // Feed reward into training manager for RL adaptive learning
+        try {
+            var trainMgr = com.tyler.forgeai.ai.TrainingManager.getInstance();
+            if (trainMgr != null) {
+                trainMgr.recordOutcome(moduleName, "reward", points);
+            }
+        } catch (Exception e) {
+            LOGGER.debug("Could not feed reward to TrainingManager: {}", e.getMessage());
+        }
     }
 
     /**
