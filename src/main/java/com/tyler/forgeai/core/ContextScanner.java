@@ -119,12 +119,41 @@ public class ContextScanner {
             boolean isFlying = player.isFallFlying();
             boolean maceEquipped = player.getMainHandItem().getItem().toString().toLowerCase().contains("mace");
             boolean crystalOpp = false;
-            // Check for obsidian or end crystal nearby
-            var nearbyBlocks = player.level().getEntitiesOfClass(net.minecraft.world.entity.decoration.ArmorStand.class, player.getBoundingBox().inflate(16));
-            for (var entity : (java.util.List<?>) nearbyBlocks) {
-                var passenger = entity.getPassengers();
-                for (var pass : passenger) {
-                    if (pass.getType().toString().contains("end_crystal")) { crystalOpp = true; break; }
+            // Enhanced crystal opportunity detection: obsidian nearby + end crystal or enderman present
+            try {
+                // Check for obsidian blocks within range
+                boolean obsidianNearby = false;
+                for (net.minecraft.core.BlockPos pos : net.minecraft.core.BlockPos.betweenClosed(
+                    player.blockPosition().offset(-8, -4, -8),
+                    player.blockPosition().offset(8, 4, 8))) {
+                    var state = player.level().getBlockState(pos);
+                    if (state.getBlock().getDescriptionId().contains("obsidian")) {
+                        obsidianNearby = true;
+                        break;
+                    }
+                }
+
+                // Check for end crystals or endermen
+                boolean endCrystalOrEndermanNearby = false;
+                var nearbyEntities = player.level().getEntities(player, player.getBoundingBox().inflate(16));
+                for (var entity : nearbyEntities) {
+                    String entityType = entity.getType().toString().toLowerCase();
+                    if (entityType.contains("end_crystal") || entityType.contains("enderman")) {
+                        endCrystalOrEndermanNearby = true;
+                        break;
+                    }
+                }
+
+                // Crystal opportunity exists if obsidian is available and end crystal/enderman is present
+                crystalOpp = obsidianNearby && endCrystalOrEndermanNearby;
+            } catch (Exception e) {
+                // Fallback to simple detection if enhanced detection fails
+                var nearbyBlocks = player.level().getEntitiesOfClass(net.minecraft.world.entity.decoration.ArmorStand.class, player.getBoundingBox().inflate(16));
+                for (var entity : (java.util.List<net.minecraft.world.entity.decoration.ArmorStand>) nearbyBlocks) {
+                    var passenger = entity.getPassengers();
+                    for (var pass : passenger) {
+                        if (pass.getType().toString().contains("end_crystal")) { crystalOpp = true; break; }
+                    }
                 }
             }
             boolean needsRes = player.getInventory().isEmpty();
@@ -134,12 +163,12 @@ public class ContextScanner {
             
             // Extended combat state
             float health = player.getHealth();
-            int food = player.getFoodLevel();
+            int food = player.getFoodData().getFoodLevel();
             boolean lowHealth = health < 6.0f;
             // Check armor durability (all pieces)
             boolean armorBroken = false;
             try {
-                for (var armor : player.getArmorSlots()) {
+                for (var armor : player.getInventory().armor) {
                     if (!armor.isEmpty() && armor.getDamageValue() > armor.getMaxDamage() * 0.8f) {
                         armorBroken = true; break;
                     }
@@ -153,7 +182,7 @@ public class ContextScanner {
                 hasRockets = main.contains("rocket") || off.contains("rocket") || main.contains("firework") || off.contains("firework");
             } catch (Exception ignored) {}
             try {
-                nearbyOpponents = (int) player.getLevel().players().stream()
+                nearbyOpponents = (int) player.level().players().stream()
                     .filter(p -> !p.getUUID().equals(player.getUUID()) && p.distanceTo(player) < 12.0)
                     .count();
                 } catch (Exception ignored) { nearbyOpponents = 0; }

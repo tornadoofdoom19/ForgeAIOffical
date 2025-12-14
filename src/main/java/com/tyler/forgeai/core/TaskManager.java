@@ -39,6 +39,7 @@ public class TaskManager {
         public long startedAt;
         public long completedAt;
         public String failureReason;
+        public Map<String, Object> pauseData;
 
         public Task(String id, AICommandParser.CommandType commandType, 
                    TaskPriority priority, Map<String, String> parameters) {
@@ -48,6 +49,7 @@ public class TaskManager {
             this.parameters = new HashMap<>(parameters);
             this.status = TaskStatus.QUEUED;
             this.createdAt = System.currentTimeMillis();
+            this.pauseData = new HashMap<>();
         }
 
         public long getElapsedTime() {
@@ -86,6 +88,28 @@ public class TaskManager {
         if (task == null) return;
         taskQueue.offer(task);
         LOGGER.info("Enqueued task: {} - {}", task.id, task.commandType);
+    }
+
+    /**
+     * Remove a task from the queue by ID.
+     */
+    public boolean removeTask(String taskId) {
+        if (taskId == null) return false;
+        
+        // Check if it's the current task
+        if (currentTask != null && taskId.equals(currentTask.id)) {
+            currentTask.status = TaskStatus.CANCELLED;
+            currentTask = null;
+            LOGGER.info("Cancelled current task: {}", taskId);
+            return true;
+        }
+        
+        // Remove from queue if present
+        boolean removed = taskQueue.removeIf(task -> taskId.equals(task.id));
+        if (removed) {
+            LOGGER.info("Removed task from queue: {}", taskId);
+        }
+        return removed;
     }
 
     /**
@@ -229,9 +253,20 @@ public class TaskManager {
             case TASK_RAID_FARM:
             case TASK_BOTTLE_FARM:
             case TASK_AFK:
+            case TASK_EXPLORE:
+            case TASK_FIND_BASE:
+            case TASK_FIND_STRUCTURE:
+            case TASK_BEAT_GAME:
+            case TASK_OBSERVE_FIGHT:
+            case TASK_FARM_ANIMALS:
+            case TASK_COLLECT_RESOURCES:
             case NAV_GO_TO:
             case NAV_HOME:
                 return TaskPriority.NORMAL;
+
+            // Trust management
+            case TRUST_SET_OWNER:
+                return TaskPriority.HIGH;
 
             // Communication
             case CHAT_SAY_PUBLIC:

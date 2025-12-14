@@ -27,15 +27,17 @@ public class SharedWorldMemory {
     public static class WorldLocation {
         public String name;
         public int x, y, z;
-        public String type;  // bed, chest, portal, base, etc.
+        public String dimension;  // overworld, nether, end
+        public String type;  // bed, chest, portal, base, bastion, fortress, etc.
         public long lastUpdated;
         public String discoveredBy;
 
-        public WorldLocation(String name, int x, int y, int z, String type, String discoveredBy) {
+        public WorldLocation(String name, int x, int y, int z, String dimension, String type, String discoveredBy) {
             this.name = name;
             this.x = x;
             this.y = y;
             this.z = z;
+            this.dimension = dimension;
             this.type = type;
             this.discoveredBy = discoveredBy;
             this.lastUpdated = System.currentTimeMillis();
@@ -43,7 +45,7 @@ public class SharedWorldMemory {
 
         @Override
         public String toString() {
-            return String.format("Loc{%s:%s@%d,%d,%d}", name, type, x, y, z);
+            return String.format("Loc{%s:%s@%s %d,%d,%d}", name, type, dimension, x, y, z);
         }
     }
 
@@ -80,10 +82,10 @@ public class SharedWorldMemory {
     /**
      * Register or update a world location (bed, chest, portal, etc.)
      */
-    public void registerLocation(String name, int x, int y, int z, String type, String discoveredBy) {
-        WorldLocation loc = new WorldLocation(name, x, y, z, type, discoveredBy);
+    public void registerLocation(String name, int x, int y, int z, String dimension, String type, String discoveredBy) {
+        WorldLocation loc = new WorldLocation(name, x, y, z, dimension, type, discoveredBy);
         locations.put(name.toLowerCase(), loc);
-        LOGGER.info("Registered location: {} at {},{},{} by {}", name, x, y, z, discoveredBy);
+        LOGGER.info("Registered location: {} at {},{},{} in {} by {}", name, x, y, z, dimension, discoveredBy);
     }
 
     /**
@@ -107,10 +109,23 @@ public class SharedWorldMemory {
     }
 
     /**
-     * Find nearest location of a type from player position.
+     * Get all locations of a specific type in a specific dimension.
      */
-    public WorldLocation findNearestLocation(String type, int playerX, int playerY, int playerZ) {
-        List<WorldLocation> candidates = getLocationsByType(type);
+    public List<WorldLocation> getLocationsByTypeAndDimension(String type, String dimension) {
+        List<WorldLocation> result = new ArrayList<>();
+        for (WorldLocation loc : locations.values()) {
+            if (loc.type.equalsIgnoreCase(type) && loc.dimension.equalsIgnoreCase(dimension)) {
+                result.add(loc);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Find nearest location of a type in a specific dimension from player position.
+     */
+    public WorldLocation findNearestLocationInDimension(String type, String dimension, int playerX, int playerY, int playerZ) {
+        List<WorldLocation> candidates = getLocationsByTypeAndDimension(type, dimension);
         WorldLocation nearest = null;
         double minDist = Double.MAX_VALUE;
 
@@ -200,6 +215,7 @@ public class SharedWorldMemory {
             locTag.putInt("x", loc.x);
             locTag.putInt("y", loc.y);
             locTag.putInt("z", loc.z);
+            locTag.putString("dimension", loc.dimension);
             locTag.putString("type", loc.type);
             locTag.putString("discoveredBy", loc.discoveredBy);
             locTag.putLong("lastUpdated", loc.lastUpdated);
@@ -239,6 +255,7 @@ public class SharedWorldMemory {
                 locTag.getInt("x"),
                 locTag.getInt("y"),
                 locTag.getInt("z"),
+                locTag.getString("dimension"),
                 locTag.getString("type"),
                 locTag.getString("discoveredBy")
             );

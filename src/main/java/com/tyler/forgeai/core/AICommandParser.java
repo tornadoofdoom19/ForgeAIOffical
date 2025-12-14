@@ -31,16 +31,33 @@ public class AICommandParser {
         TASK_RAID_FARM("raid farm|raid|collect raids", CommandCategory.TASK),
         TASK_BOTTLE_FARM("bottle farm|exp farm|bottle xp", CommandCategory.TASK),
         TASK_AFK("afk|idle|sit", CommandCategory.TASK),
+        TASK_EXPLORE("explore|wander|roam", CommandCategory.TASK),
+        TASK_FIND_BASE("find base|locate base|scan base", CommandCategory.TASK),
+        TASK_FIND_STRUCTURE("find structure|locate structure|scan structure", CommandCategory.TASK),
+        TASK_BEAT_GAME("beat game|win game|complete game", CommandCategory.TASK),
+        TASK_OBSERVE_FIGHT("observe fight|watch fight|analyze fight", CommandCategory.TASK),
+        TASK_FARM_ANIMALS("farm animals|breed animals|animal farm", CommandCategory.TASK),
+        TASK_COLLECT_RESOURCES("collect resources|gather all|mine all", CommandCategory.TASK),
+        TASK_FIND_ITEM("find|get|collect", CommandCategory.TASK),
+        TASK_GO_TO_LOCATION("go to|travel to|navigate to", CommandCategory.TASK),
+        TASK_BARTER("barter|trade|exchange", CommandCategory.TASK),
+        TASK_FIGHT_MONSTERS("fight|combat|battle", CommandCategory.TASK),
         
         // Chat Commands
         CHAT_SAY_PUBLIC("say|chat|public", CommandCategory.CHAT),
         CHAT_WHISPER_PRIVATE("whisper|private|dm|message", CommandCategory.CHAT),
         CHAT_MESSAGE_PLAYER("tell|msg", CommandCategory.CHAT),
+        CHAT_DISCORD_DM("discord|discord_dm", CommandCategory.CHAT),
+        CHAT_TELEGRAM_DM("telegram|telegram_dm", CommandCategory.CHAT),
+        CHAT_MOD_MAIL("mail|modmail", CommandCategory.CHAT),
         
         // Navigation Commands
         NAV_GO_TO("go to|navigate|move to", CommandCategory.NAV),
         NAV_TELEPORT("teleport|tp", CommandCategory.NAV),
         NAV_HOME("home|base|spawn", CommandCategory.NAV),
+        
+        // Trust/Owner Commands
+        TRUST_SET_OWNER("set owner|make owner|assign owner", CommandCategory.TRUST),
         
         // RL Feedback Commands
         RL_REWARD("good|reward|excellent|well done", CommandCategory.RL_FEEDBACK),
@@ -60,7 +77,7 @@ public class AICommandParser {
     }
 
     public enum CommandCategory {
-        PVP, TASK, CHAT, NAV, RL_FEEDBACK
+        PVP, TASK, CHAT, NAV, TRUST, RL_FEEDBACK
     }
 
     public static class ParsedCommand {
@@ -138,12 +155,22 @@ public class AICommandParser {
                     params.put("channel", "private");
                 } else if (type == CommandType.CHAT_SAY_PUBLIC) {
                     params.put("channel", "public");
+                } else if (type == CommandType.CHAT_DISCORD_DM) {
+                    params.put("channel", "discord_dm");
+                } else if (type == CommandType.CHAT_TELEGRAM_DM) {
+                    params.put("channel", "telegram_dm");
+                } else if (type == CommandType.CHAT_MOD_MAIL) {
+                    params.put("channel", "modmail");
                 }
                 params.put("message", args);
                 break;
 
             case NAV:
                 params.put("destination", args);
+                break;
+
+            case TRUST:
+                params.put("owner", args.trim());
                 break;
 
             case RL_FEEDBACK:
@@ -220,6 +247,20 @@ public class AICommandParser {
                 return "Bottle exp at farm";
             case TASK_AFK:
                 return "AFK idle at current position";
+            case TASK_EXPLORE:
+                return "Explore the world and gather resources";
+            case TASK_FIND_BASE:
+                return "Scan for player bases";
+            case TASK_FIND_STRUCTURE:
+                return "Locate Minecraft structures";
+            case TASK_BEAT_GAME:
+                return "Complete the game objectives";
+            case TASK_OBSERVE_FIGHT:
+                return "Observe and learn from player combat";
+            case TASK_FARM_ANIMALS:
+                return "Farm and breed animals";
+            case TASK_COLLECT_RESOURCES:
+                return "Collect all available resources";
 
             case CHAT_SAY_PUBLIC:
                 return "Say message in public chat";
@@ -227,6 +268,12 @@ public class AICommandParser {
                 return "Send private message";
             case CHAT_MESSAGE_PLAYER:
                 return "Message specific player";
+            case CHAT_DISCORD_DM:
+                return "Send Discord DM";
+            case CHAT_TELEGRAM_DM:
+                return "Send Telegram DM";
+            case CHAT_MOD_MAIL:
+                return "Send mod mail";
 
             case NAV_GO_TO:
                 return "Navigate to: " + cmd.parameters.get("destination");
@@ -234,6 +281,9 @@ public class AICommandParser {
                 return "Teleport to: " + cmd.parameters.get("destination");
             case NAV_HOME:
                 return "Return to home/base";
+
+            case TRUST_SET_OWNER:
+                return "Set bot owner to: " + cmd.parameters.get("owner");
 
             case RL_REWARD:
                 return "Reinforce positive behavior";

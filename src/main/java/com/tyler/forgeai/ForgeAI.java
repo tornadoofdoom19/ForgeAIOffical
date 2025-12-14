@@ -44,6 +44,10 @@ public class ForgeAI implements ModInitializer {
 
         decisionEngine = new DecisionEngine(scanner, comms);
 
+        // Create task manager with decision engine as executor
+        TaskManager taskManager = new TaskManager(decisionEngine);
+        decisionEngine.setTaskManager(taskManager);
+
         // AI subsystems
         trainingManager = new TrainingManager();
         memoryManager = new MemoryManager();
@@ -98,8 +102,8 @@ public class ForgeAI implements ModInitializer {
         TrustCommandRegistrar trustRegistrar = new TrustCommandRegistrar(comms);
         trustRegistrar.register();
         // Wire chat monitor into comms
-        try { coms.setChatMonitor(chatMonitor); } catch (Exception ignored) {}
-
+        try { coms.setChatMonitor(chatMonitor); } catch (Exception ignored) {}        // Wire decision engine into comms for command execution
+        comms.setDecisionEngine(decisionEngine);
         // Register tick loop
         ServerTickEvents.END_SERVER_TICK.register(server -> {
             try {

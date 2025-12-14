@@ -19,10 +19,15 @@ public class CommunicationManager {
         private TrustCommandRegistrar trustRegistrar = null;
         private com.tyler.forgeai.core.ChatMonitor chatMonitor = null;
     private final Gson gson = new Gson();
+    private com.tyler.forgeai.core.DecisionEngine decisionEngine = null;
 
     public void init() {
         loadAllowedList();
         LOGGER.info("CommunicationManager initialized with " + allowedPlayers.size() + " trusted players.");
+    }
+
+    public void setDecisionEngine(com.tyler.forgeai.core.DecisionEngine decisionEngine) {
+        this.decisionEngine = decisionEngine;
     }
 
     public Set<String> getAllowedPlayers() {
@@ -85,6 +90,14 @@ public class CommunicationManager {
             var decision = com.tyler.forgeai.api.PromptParser.parsePrompt(message);
             if (decision != null && sender instanceof net.minecraft.server.level.ServerPlayer sp) {
                 LOGGER.info("Processing decision from chat: {}", decision);
+                // Execute the command
+                if (decisionEngine != null && decisionEngine.getTaskManager() != null) {
+                    TaskManager.TaskPriority priority = getPriorityForCommand(decision.type);
+                    decisionEngine.getTaskManager().queueTask(decision, priority);
+                    // Send confirmation
+                    String desc = com.tyler.forgeai.core.AICommandParser.describe(decision);
+                    sp.sendSystemMessage(net.minecraft.network.chat.Component.literal("§a[ForgeAI]§r Executing: " + desc));
+                }
             }
         } catch (Exception e) {
             LOGGER.warn("Failed to parse chat message: {}", e.getMessage());
@@ -139,6 +152,15 @@ public class CommunicationManager {
         } catch (Exception e) {
             LOGGER.error("Failed to save allowed list: ", e);
         }
+    }
+
+    /**
+     * Send a message to the primary owner.
+     */
+    public void sendMessageToOwner(String message) {
+        // This would need to be implemented based on how messages are sent
+        // For now, just log it
+        LOGGER.info("Message to owner: {}", message);
     }
 
     private String normalize(String name) {

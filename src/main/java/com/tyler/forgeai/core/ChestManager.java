@@ -54,9 +54,83 @@ public class ChestManager {
     }
 
     /**
+     * Check if a chest is suitable for bot use (not naturally spawned).
+     */
+    public boolean isChestSuitableForBotUse(ServerLevel level, BlockPos chestPos) {
+        if (level == null || chestPos == null) return false;
+
+        // Check if chest is in a structure that typically has natural chests
+        String structureName = getStructureAtPosition(level, chestPos);
+        if (structureName != null) {
+            switch (structureName.toLowerCase()) {
+                case "village":
+                case "dungeon":
+                case "mineshaft":
+                case "stronghold":
+                case "desert_pyramid":
+                case "jungle_pyramid":
+                case "ocean_monument":
+                case "woodland_mansion":
+                    return false; // Natural structure chests
+                default:
+                    break;
+            }
+        }
+
+        // Check if chest is near other player-built structures
+        if (isNearPlayerBuiltStructures(level, chestPos)) {
+            return true; // Likely player-placed
+        }
+
+        // Default to suitable if we can't determine
+        return true;
+    }
+
+    /**
+     * Get the structure name at a position (if any).
+     */
+    private String getStructureAtPosition(ServerLevel level, BlockPos pos) {
+        // This would use Minecraft's structure detection
+        // For now, return null (not implemented)
+        return null;
+    }
+
+    /**
+     * Check if position is near player-built structures.
+     */
+    private boolean isNearPlayerBuiltStructures(ServerLevel level, BlockPos pos) {
+        // Check for nearby crafting tables, furnaces, etc.
+        int radius = 10;
+        for (int x = -radius; x <= radius; x++) {
+            for (int y = -radius; y <= radius; y++) {
+                for (int z = -radius; z <= radius; z++) {
+                    BlockPos checkPos = pos.offset(x, y, z);
+                    var block = level.getBlockState(checkPos).getBlock();
+                    String blockName = block.getDescriptionId();
+                    if (blockName.contains("crafting_table") ||
+                        blockName.contains("furnace") ||
+                        blockName.contains("anvil") ||
+                        blockName.contains("enchanting_table")) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
      * Scan a chest and cache its inventory.
      */
     public ChestInventorySnapshot scanChest(ServerLevel level, BlockPos chestPos) {
+        if (level == null || chestPos == null) return null;
+
+        // Check if chest is suitable for bot use
+        if (!isChestSuitableForBotUse(level, chestPos)) {
+            LOGGER.debug("Skipping unsuitable chest at {}", chestPos);
+            return null;
+        }
+
         if (level == null || chestPos == null) return null;
 
         try {

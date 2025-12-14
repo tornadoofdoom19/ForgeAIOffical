@@ -75,31 +75,189 @@ public class DimensionalTravelManager {
     }
 
     /**
-     * Plan travel route between dimensions.
+     * Plan optimal travel route considering available transportation methods.
      */
-    public static TravelRoute planDimensionalTravel(ServerPlayer player, Dimension targetDim, BlockPos targetPos) {
+    public static TravelRoute planOptimalTravel(ServerPlayer player, Dimension targetDim, BlockPos targetPos,
+                                               com.tyler.forgeai.ai.SharedWorldMemory worldMemory) {
         BlockPos currentPos = player.blockPosition();
         ServerLevel currentLevel = (ServerLevel) player.level();
-        
-        Dimension currentDim = identifyDimension(currentLevel);
 
+        Dimension currentDim = identifyDimension(currentLevel);
         TravelRoute route = new TravelRoute(currentPos, targetPos, currentDim, targetDim);
 
         if (currentDim == targetDim) {
-            LOGGER.info("Already in {}, navigating within dimension", targetDim.name);
-            // Just navigate to target within same dimension
-            return route;
+            // Same dimension - choose fastest ground transportation
+            return planIntraDimensionalTravel(player, targetPos, worldMemory);
         }
 
-        // Find or create portals
-        if (currentDim == Dimension.OVERWORLD && targetDim == Dimension.NETHER) {
-            route = planNetherTravel(route);
-        } else if (currentDim == Dimension.NETHER && targetDim == Dimension.OVERWORLD) {
-            route = planNetherReturn(route);
-        } else if (currentDim == Dimension.OVERWORLD && targetDim == Dimension.END) {
-            route = planEndTravel(route);
-        } else if (currentDim == Dimension.END && targetDim == Dimension.OVERWORLD) {
-            route = planEndReturn(route);
+        // Inter-dimensional travel - find best portal route
+        return planInterDimensionalTravel(player, targetDim, targetPos, worldMemory);
+    }
+
+    /**
+     * Plan travel within the same dimension using optimal transportation.
+     */
+    private static TravelRoute planIntraDimensionalTravel(ServerPlayer player, BlockPos targetPos,
+                                                         com.tyler.forgeai.ai.SharedWorldMemory worldMemory) {
+        TravelRoute route = new TravelRoute(player.blockPosition(), targetPos,
+                                          identifyDimension((ServerLevel) player.level()),
+                                          identifyDimension((ServerLevel) player.level()));
+
+        double distance = Math.sqrt(player.blockPosition().distSqr(targetPos));
+
+        // Check available transportation methods in order of speed
+        if (hasElytra(player) && distance > 100) {
+            // Elytra is fastest for long distances
+            route.portalLocations.add(player.blockPosition()); // Start
+            route.portalLocations.add(targetPos); // End
+            LOGGER.info("Planning Elytra travel - distance: {} blocks", (int) distance);
+        } else if (hasHorseOrVehicle(player) && distance > 50) {
+            // Horse/cart for medium distances
+            route.portalLocations.add(player.blockPosition());
+            route.portalLocations.add(targetPos);
+            LOGGER.info("Planning vehicle travel - distance: {} blocks", (int) distance);
+        } else if (worldMemory != null) {
+            // Check for remembered waypoints or paths
+            var nearestWaypoint = worldMemory.findNearestLocation("waypoint", player.getX(), player.getY(), player.getZ());
+            if (nearestWaypoint != null && player.blockPosition().distSqr(nearestWaypoint.x, nearestWaypoint.y, nearestWaypoint.z) < distance) {
+                route.portalLocations.add(new BlockPos(nearestWaypoint.x, nearestWaypoint.y, nearestWaypoint.z));
+                route.portalLocations.add(targetPos);
+                LOGGER.info("Planning waypoint-assisted travel via {}", nearestWaypoint.name);
+            } else {
+                // Standard walking
+                route.portalLocations.add(player.blockPosition());
+                route.portalLocations.add(targetPos);
+                LOGGER.info("Planning walking travel - distance: {} blocks", (int) distance);
+            }
+        } else {
+            // Default to walking
+            route.portalLocations.add(player.blockPosition());
+            route.portalLocations.add(targetPos);
+            LOGGER.info("Planning walking travel - distance: {} blocks", (int) distance);
+        }
+
+        return route;
+    }
+
+    /**
+     * Plan inter-dimensional travel using optimal portal routes.
+     */
+    private static TravelRoute planInterDimensionalTravel(ServerPlayer player, Dimension targetDim, BlockPos targetPos,
+                                                         com.tyler.forgeai.ai.SharedWorldMemory worldMemory) {
+        BlockPos currentPos = player.blockPosition();
+        ServerLevel currentLevel = (ServerLevel) player.level();
+
+        Dimension currentDim = identifyDimension(currentLevel);
+        TravelRoute route = new TravelRoute(currentPos, targetPos, currentDim, targetDim);
+
+        // Try to find remembered portals first
+        if (worldMemory != null) {
+            if (currentDim == Dimension.OVERWORLD && targetDim == Dimension.NETHER) {
+                return planNetherTravelWithMemory(route, worldMemory);
+            } else if (currentDim == Dimension.NETHER && targetDim == Dimension.OVERWORLD) {
+                return planNetherReturnWithMemory(route, worldMemory);
+            } else if (currentDim == Dimension.OVERWORLD && targetDim == Dimension.END) {
+                return planEndTravelWithMemory(route, worldMemory);
+            }
+        }
+
+        // Fall back to basic portal finding
+        return planDimensionalTravel(player, targetDim, targetPos);
+    }
+
+    /**
+     * Check if player has Elytra equipped.
+     */
+    private static boolean hasElytra(ServerPlayer player) {
+        return player.getInventory().armor.get(2).getItem().toString().toLowerCase().contains("elytra");
+    }
+
+    /**
+     * Plan Nether travel using remembered portals.
+     */
+    private static TravelRoute planNetherTravelWithMemory(TravelRoute route, com.tyler.forgeai.ai.SharedWorldMemory worldMemory) {
+        LOGGER.info("Planning Nether travel with memory assistance");
+
+        // Find remembered Nether portal closest to target location
+        var rememberedPortal = worldMemory.findNearestLocationInDimension("portal", "nether",
+            route.end.getX(), route.end.getY(), route.end.getZ());
+
+        if (rememberedPortal != null) {
+            // Use remembered portal
+            BlockPos netherPortal = new BlockPos(rememberedPortal.x, rememberedPortal.y, rememberedPortal.z);
+            BlockPos overworldPortal = scaleFromNether(netherPortal);
+
+            route.portalLocations.add(overworldPortal);
+            route.portalLocations.add(netherPortal);
+            LOGGER.info("Using remembered Nether portal at {}", netherPortal.toShortString());
+        } else {
+            // Fall back to coordinate-based portal finding
+            BlockPos expectedNetherPortal = scaleToNether(route.end);
+            BlockPos overWorldPortal = scaleFromNether(expectedNetherPortal);
+
+            route.portalLocations.add(overWorldPortal);
+            route.portalLocations.add(expectedNetherPortal);
+            LOGGER.info("No remembered portal, using coordinate-based portal at {}", expectedNetherPortal.toShortString());
+        }
+
+        return route;
+    }
+
+    /**
+     * Plan Nether return using remembered portals.
+     */
+    private static TravelRoute planNetherReturnWithMemory(TravelRoute route, com.tyler.forgeai.ai.SharedWorldMemory worldMemory) {
+        LOGGER.info("Planning Nether return with memory assistance");
+
+        // Find remembered Overworld portal
+        var rememberedPortal = worldMemory.findNearestLocationInDimension("portal", "overworld",
+            route.end.getX(), route.end.getY(), route.end.getZ());
+
+        if (rememberedPortal != null) {
+            BlockPos overworldPortal = new BlockPos(rememberedPortal.x, rememberedPortal.y, rememberedPortal.z);
+            BlockPos netherPortal = scaleToNether(overworldPortal);
+
+            route.portalLocations.add(netherPortal);
+            route.portalLocations.add(overworldPortal);
+            LOGGER.info("Using remembered Overworld portal at {}", overworldPortal.toShortString());
+        } else {
+            // Fall back to scaling current position
+            BlockPos netherPortal = route.start;
+            BlockPos overworldPortal = scaleFromNether(netherPortal);
+
+            route.portalLocations.add(netherPortal);
+            route.portalLocations.add(overworldPortal);
+            LOGGER.info("No remembered portal, using scaled portal at {}", overworldPortal.toShortString());
+        }
+
+        return route;
+    }
+
+    /**
+     * Plan End travel using remembered portals.
+     */
+    private static TravelRoute planEndTravelWithMemory(TravelRoute route, com.tyler.forgeai.ai.SharedWorldMemory worldMemory) {
+        LOGGER.info("Planning End travel with memory assistance");
+
+        // Look for remembered End portal or stronghold
+        var endPortal = worldMemory.getLocation("end_portal");
+        var stronghold = worldMemory.getLocation("stronghold");
+
+        if (endPortal != null) {
+            route.portalLocations.add(route.start);
+            route.portalLocations.add(new BlockPos(endPortal.x, endPortal.y, endPortal.z));
+            LOGGER.info("Using remembered End portal");
+        } else if (stronghold != null) {
+            route.portalLocations.add(route.start);
+            route.portalLocations.add(new BlockPos(stronghold.x, stronghold.y, stronghold.z));
+            route.requiresNewPortal = true;
+            LOGGER.info("Using remembered stronghold for End portal");
+        } else {
+            // Need to find stronghold
+            route.portalLocations.add(route.start);
+            route.portalLocations.add(route.end);
+            route.requiresNewPortal = true;
+            LOGGER.warn("No remembered End access points - will need to locate stronghold");
         }
 
         return route;
@@ -307,6 +465,50 @@ public class DimensionalTravelManager {
             LOGGER.debug("Error creating portal: {}", e.getMessage());
             return false;
         }
+    }
+
+    /**
+     * Find remembered portal locations for travel.
+     */
+    public static TravelRoute findRememberedPortalRoute(ServerPlayer player, Dimension targetDim, com.tyler.forgeai.ai.SharedWorldMemory worldMemory) {
+        BlockPos currentPos = player.blockPosition();
+        ServerLevel currentLevel = (ServerLevel) player.level();
+        Dimension currentDim = identifyDimension(currentLevel);
+
+        if (currentDim == targetDim) {
+            return new TravelRoute(currentPos, currentPos, currentDim, targetDim);
+        }
+
+        TravelRoute route = new TravelRoute(currentPos, currentPos, currentDim, targetDim);
+
+        // Look for remembered portals
+        if (currentDim == Dimension.OVERWORLD && targetDim == Dimension.NETHER) {
+            var netherPortals = worldMemory.getLocationsByTypeAndDimension("portal", "nether");
+            if (!netherPortals.isEmpty()) {
+                var nearestPortal = worldMemory.findNearestLocationInDimension("portal", "nether",
+                    currentPos.getX(), currentPos.getY(), currentPos.getZ());
+                if (nearestPortal != null) {
+                    BlockPos overworldPortal = scaleFromNether(new BlockPos(nearestPortal.x, nearestPortal.y, nearestPortal.z));
+                    route.portalLocations.add(overworldPortal);
+                    route.portalLocations.add(new BlockPos(nearestPortal.x, nearestPortal.y, nearestPortal.z));
+                    LOGGER.info("Using remembered Nether portal at overworld: {}", overworldPortal.toShortString());
+                }
+            }
+        } else if (currentDim == Dimension.NETHER && targetDim == Dimension.OVERWORLD) {
+            var overworldPortals = worldMemory.getLocationsByTypeAndDimension("portal", "overworld");
+            if (!overworldPortals.isEmpty()) {
+                var nearestPortal = worldMemory.findNearestLocationInDimension("portal", "overworld",
+                    currentPos.getX(), currentPos.getY(), currentPos.getZ());
+                if (nearestPortal != null) {
+                    BlockPos netherPortal = scaleToNether(new BlockPos(nearestPortal.x, nearestPortal.y, nearestPortal.z));
+                    route.portalLocations.add(netherPortal);
+                    route.portalLocations.add(new BlockPos(nearestPortal.x, nearestPortal.y, nearestPortal.z));
+                    LOGGER.info("Using remembered Overworld portal at nether: {}", netherPortal.toShortString());
+                }
+            }
+        }
+
+        return route;
     }
 
     /**
